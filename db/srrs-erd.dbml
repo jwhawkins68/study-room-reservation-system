@@ -1,0 +1,139 @@
+// Study Room Reservation System (SRRS) - ERD
+// Matches db/schema.sql v1.1 (live in Supabase project srrs-study-rooms)
+// Paste into dbdiagram.io
+
+Project SRRS {
+  database_type: 'PostgreSQL'
+  Note: '''
+  Study Room Reservation System, schema v1.1.
+  Core rule: two confirmed reservations for the same room can never overlap
+  (exclusion constraint no_double_booking, half-open time ranges, so back-to-back is allowed).
+  '''
+}
+
+Enum user_role {
+  student
+  staff
+}
+
+Enum reservation_status {
+  confirmed
+  cancelled
+}
+
+TableGroup accounts {
+  auth_users
+  profiles
+}
+
+TableGroup rooms_and_features {
+  rooms
+  amenities
+  room_amenities
+}
+
+TableGroup booking {
+  reservations
+  room_blocks
+  booking_attempts
+}
+
+Table auth_users [headercolor: #808285] {
+  id uuid [pk, note: 'Managed by Supabase Auth']
+  email text
+  Note: 'Supabase built-in table (auth.users). Login accounts live here.'
+}
+
+Table profiles [headercolor: #582c83] {
+  id uuid [pk, note: 'Same id as auth.users']
+  full_name text [not null]
+  student_id text [unique, note: 'null for staff']
+  email text [not null, unique]
+  role user_role [not null, default: 'student']
+  created_at timestamptz [not null, default: `now()`]
+  Note: 'Created automatically on sign-up (trigger on_auth_user_created).'
+}
+
+Table rooms [headercolor: #582c83] {
+  id bigint [pk, increment]
+  name text [not null]
+  building text [not null]
+  floor text
+  capacity int [not null, note: 'must be > 0']
+  description text
+  is_active boolean [not null, default: true, note: 'false = closed, hidden from students']
+  created_at timestamptz [not null, default: `now()`]
+  indexes {
+    (building, name) [unique]
+  }
+}
+
+Table amenities [headercolor: #582c83] {
+  id bigint [pk, increment]
+  name text [not null, unique, note: 'Whiteboard, TV / HDMI, ...']
+}
+
+Table room_amenities [headercolor: #582c83] {
+  room_id bigint [not null]
+  amenity_id bigint [not null]
+  indexes {
+    (room_id, amenity_id) [pk]
+  }
+  Note: 'Links rooms to their features (many-to-many).'
+}
+
+Table reservations [headercolor: #eaaa00] {
+  id bigint [pk, increment]
+  room_id bigint [not null]
+  user_id uuid [not null]
+  starts_at timestamptz [not null]
+  ends_at timestamptz [not null]
+  party_size int [not null, default: 1]
+  purpose text
+  status reservation_status [not null, default: 'confirmed']
+  created_at timestamptz [not null, default: `now()`]
+  cancelled_at timestamptz
+  indexes {
+    (user_id, starts_at) [name: 'reservations_user_idx']
+  }
+  Note: '''
+  Rules enforced by the database:
+  - No overlapping confirmed bookings for the same room (exclusion constraint)
+  - ends_at > starts_at, max 3 hours
+  - No closed rooms, blocked times, past start times, or party bigger than capacity (trigger)
+  - Cancelling frees the slot (constraint only covers status = confirmed)
+  '''
+}
+
+Table room_blocks [headercolor: #eaaa00] {
+  id bigint [pk, increment]
+  room_id bigint [not null]
+  starts_at timestamptz [not null]
+  ends_at timestamptz [not null]
+  reason text
+  created_by uuid
+  created_at timestamptz [not null, default: `now()`]
+  Note: 'Staff closures. Reservations cannot overlap a block.'
+}
+
+Table booking_attempts [headercolor: #eaaa00] {
+  id bigint [pk, increment]
+  attempted_at timestamptz [not null, default: `now()`]
+  user_id uuid
+  room_id bigint
+  starts_at timestamptz
+  ends_at timestamptz
+  reason_code text [not null, note: 'ROOM_TAKEN, ROOM_BLOCKED, OVER_CAPACITY, ...']
+  Note: 'Rejected and duplicate booking attempts, shown in the admin center.'
+}
+
+// Relationships
+Ref: profiles.id - auth_users.id [delete: cascade]
+Ref: reservations.user_id > profiles.id
+Ref: reservations.room_id > rooms.id
+Ref: room_blocks.room_id > rooms.id [delete: cascade]
+Ref: room_blocks.created_by > profiles.id
+Ref: room_amenities.room_id > rooms.id [delete: cascade]
+Ref: room_amenities.amenity_id > amenities.id [delete: cascade]
+Ref: booking_attempts.user_id > profiles.id [delete: set null]
+Ref: booking_attempts.room_id > rooms.id [delete: set null]
