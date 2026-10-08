@@ -1,6 +1,6 @@
 // Study Room Reservation System (SRRS) - ERD
 // Matches db/schema.sql v1.1 (live in Supabase project srrs-study-rooms)
-// Paste into dbdiagram.io
+// Builds ERD from dbdiagram.io
 
 Project SRRS {
   database_type: 'PostgreSQL'
