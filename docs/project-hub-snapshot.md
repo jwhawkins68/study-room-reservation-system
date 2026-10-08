@@ -13,7 +13,6 @@ This hub keeps everything for the Study Room Reservation System (SRRS) in one pl
 | API Contract | Every endpoint with example requests and responses | Draft v1 |
 | Data Model | ER diagram, table reference, and steps to rebuild it in dbdiagram.io | Matches schema.sql v1.1 |
 
-In Jira, only SRRS-1 exists so far. The rest ship after the team signs off on the stories.
 
 ## Decisions so far
 
@@ -32,25 +31,19 @@ In Jira, only SRRS-1 exists so far. The rest ship after the team signs off on th
 ## Open questions
 
 - [ ] Team review of the 12 user stories, then ship them to Jira
-- [ ] Where does the code live and get hosted? (GitHub repo link, plus hosting for the front end and the Node API)
-- [ ] Install the GitHub for Jira app so branches and pull requests link to tickets
-- [ ] Decide how far ahead students can book (max length is set at 3 hours)
-- [ ] Set Sprint 1 dates to Oct 2–14 in Jira and start the sprint
-- [ ] Fix the proposal: "eight-person team" vs. 7, and the duplicate role text for James and London
+- [ ] Where does the code live and get hosted? (GitHub repo link, plus hosting for the front end and the Node API) | API Calls built In second half of Sprint 1
+- [ ] Install the GitHub for Jira app so branches and pull requests link to tickets | IN PROGRESS
+- [ ] Decide how far ahead students can book (max length is set at 3 hours) | 3 HOURS
+- [ ] Set Sprint 1 dates to Oct 2–14 in Jira and start the sprint | IN PROGRESS
+- [ ] Fix the proposal: "eight-person team" vs. 7, and the duplicate role text for James and London | IN PROGRESS
 
-## Tomorrow: test accounts
-
-1. Open the Supabase dashboard and go to the srrs-study-rooms project.
-2. Go to Authentication → Users → Add user → Create new user.
-3. Make one student account and one staff account, and check "Auto confirm user" for each.
-4. Send Claude the staff email to switch that account to staff.
 
 React app `.env.local` (already filled in):
 
 ```
 VITE_SUPABASE_URL=https://jewsycggnmyaynlndobd.supabase.co
-VITE_SUPABASE_ANON_KEY=sb_publishable_KDBiLTws1LjgSQ_DEgF1bg_rFTZRnad
-VITE_USE_MOCK=true
+VITE_SUPABASE_ANON_KEY=sb_publishable_KDBiLTws1LjgSQ_DEgF1bg_rFTZRnad | Public Key is fine to host as every browser will eventually download it upon fetching the App Address. 
+VITE_USE_MOCK=true | REPLACED WITH Node.JS API Logic*
 ```
 
 
@@ -58,7 +51,7 @@ VITE_USE_MOCK=true
 
 ## User Stories
 
-12 stories across three sprints, written from the user's point of view; the technical work lives in each story's tasks. Status: draft, waiting on team review before shipping to Jira. **[BE]** = backend/database, **[FE]** = front end.
+12 stories across three sprints, written from the user's point of view; the technical work lives in each story's tasks. Status: Uploaded to JIRA Board; will decide on adding more stories for future sprints. 
 
 | # | Story | Sprint | Jira |
 | --- | --- | --- | --- |
@@ -496,14 +489,11 @@ These live in the database, so a diagram tool won't draw them; list them as note
 | A profile is created on sign-up | Trigger `on_auth_user_created` |
 | Students see only their own bookings; staff see all | Row-level security policies |
 
-### Rebuild it in dbdiagram.io
+### How we Rebuild it in dbdiagram.io
 
-1. Go to dbdiagram.io and create a new diagram.
-2. Delete the sample code in the left panel and paste the DBML below.
-3. The diagram draws itself; drag tables so `rooms` and `reservations` sit in the middle.
-4. Export as PNG or PDF for the midterm paper (Export menu, top right).
+1. Go to dbdiagram.io and create a new diagram. | DONE
+2. Export as PNG or PDF for the midterm paper (Export menu, top right). | Moved to Team Channel
 
-The same DBML works in other tools that read DBML; for draw.io or Lucidchart, copy the tables and the Relationships table above by hand.
 
 ```dbml
 Project SRRS {
