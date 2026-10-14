@@ -8,7 +8,7 @@ export default function Layout({ children }) {
   const isStaff = user?.role === 'staff';
 
   return (
-    <div className="shell">
+    <div className={user ? 'shell shell--signed-in' : 'shell'}>
       <a href="#main" className="skip-link">Skip to main content</a>
       <div className="utility">
         <div className="utility-inner">
