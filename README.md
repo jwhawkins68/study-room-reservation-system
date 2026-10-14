@@ -12,7 +12,7 @@ Students find and reserve study rooms; staff manage rooms and closures.
 
 ## Stack
 
-React · Node.js/Express · Supabase (Postgres + Auth)
+VSCODE: React · Node.js/Express · Supabase (Postgres + Auth) w/Postman for API routing validation. 
 
 ## Working rules
 
