@@ -44,8 +44,8 @@ Also done today:
 
 1.. **MOREPostman (later this week):** import `api/SRRS-API.postman_collection.json`, fill in the test account details locally, and run "0. Log in" first. Don't export the collection back into the repo with credentials in it.
 2.. **Sprint 2 (Oct 15–28):** stories 6–10 (book a room, my bookings, cancel, find open rooms by time, change a booking).
-5. **Midterm requirements paper:** due Oct 22 at 5 p.m.
-6. **Security follow-up:** the web app's `npm audit` reports 2 moderate issues in `react-router` that ship with the app. The fix is an upgrade to react-router 7, a breaking change, so do it on its own branch. The other 5 issues are in dev-only tools.
-7. **Open questions from the project hub:** team review of the stories and adding them to Jira, hosting for the app and API, the GitHub for Jira app, how far ahead students can book, and the proposal fixes.
+3. **Midterm requirements paper:** due Oct 22 at 5 p.m.
+4. **Security follow-up:** the web app's `npm audit` reports 2 moderate issues in `react-router` that ship with the app. The fix is an upgrade to react-router 7, a breaking change, so do it on its own branch. The other 5 issues are in dev-only tools.
+6. **Open questions from the project hub:** team review of the stories and adding them to Jira, hosting for the app and API, the GitHub for Jira app, how far ahead students can book, and the proposal fixes.
 
 ## Notes
