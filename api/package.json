@@ -1,0 +1,19 @@
+{
+  "name": "srrs-api",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Study Room Reservation System API (Node/Express + Supabase)",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "test": "node --test test/errors.test.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0"
+  }
+}
