@@ -13,7 +13,7 @@ npm install
 npm run dev               # http://localhost:4000/api/health should return {"ok":true}
 ```
 
-**Secret key:** Supabase dashboard → srrs-study-rooms → Project Settings → API Keys → copy the `service_role` /
+**Secret key:**
 secret key into `SUPABASE_SERVICE_ROLE_KEY` in `.env`. It's only used for sign-up and logging rejected bookings.
 `.env` is git-ignored; never commit it or put it in the React app.
 
