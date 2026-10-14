@@ -1,4 +1,4 @@
-// Sample data that mirrors the seed rows in schema.sql, shaped exactly like the API contract.
+// Sample data that mirrors the seed rows in schema.sql and seed-buildings.sql, shaped exactly like the API contract.
 // Used when VITE_USE_MOCK=true or no Supabase URL is set.
 import { ApiError } from './errors';
 
@@ -23,6 +23,43 @@ const rooms = [
     description: 'Small room for pairs', amenities: ['Power outlets'] },
   { id: 5, name: 'Collab Room A', building: 'Student Center', floor: '3', capacity: 10, isActive: true,
     description: 'Large collaboration space', amenities: ['Accessible', 'TV / HDMI', 'Whiteboard'] },
+  // More buildings (db/seed-buildings.sql)
+  { id: 6, name: 'Collab Room B', building: 'Student Center', floor: '2', capacity: 6, isActive: true,
+    description: 'Group room between classes', amenities: ['Accessible', 'Power outlets', 'Whiteboard'] },
+  { id: 7, name: 'Project Room 110', building: 'New Engineering Building', floor: '1', capacity: 6, isActive: true,
+    description: 'Team room with a wall-to-wall whiteboard', amenities: ['Power outlets', 'Whiteboard'] },
+  { id: 8, name: 'Project Room 112', building: 'New Engineering Building', floor: '1', capacity: 4, isActive: true,
+    description: 'Small team room', amenities: ['Power outlets', 'Whiteboard'] },
+  { id: 9, name: 'Project Room 215', building: 'New Engineering Building', floor: '2', capacity: 8, isActive: true,
+    description: 'Room with a display for design reviews', amenities: ['TV / HDMI', 'Webcam', 'Whiteboard'] },
+  { id: 10, name: 'Study Room 220', building: 'New Engineering Building', floor: '2', capacity: 2, isActive: true,
+    description: 'Quiet room for pairs', amenities: ['Power outlets'] },
+  { id: 11, name: 'Study Room 104', building: 'Collins Engineering', floor: '1', capacity: 4, isActive: true,
+    description: 'Quiet room off the main hallway', amenities: ['Accessible', 'Power outlets'] },
+  { id: 12, name: 'Study Room 106', building: 'Collins Engineering', floor: '1', capacity: 6, isActive: true,
+    description: 'Group room with a large table', amenities: ['Power outlets', 'Whiteboard'] },
+  { id: 13, name: 'Conference Room 301', building: 'Collins Engineering', floor: '3', capacity: 12, isActive: true,
+    description: 'Large room for team meetings and practice talks', amenities: ['Accessible', 'TV / HDMI', 'Webcam', 'Whiteboard'] },
+  { id: 14, name: 'Study Room 120', building: 'Harrington Science', floor: '1', capacity: 4, isActive: true,
+    description: 'Room for lab report write-ups', amenities: ['Power outlets', 'Whiteboard'] },
+  { id: 15, name: 'Study Room 122', building: 'Harrington Science', floor: '1', capacity: 6, isActive: true,
+    description: 'Group room for exam review', amenities: ['TV / HDMI', 'Whiteboard'] },
+  { id: 16, name: 'Study Room 230', building: 'Harrington Science', floor: '2', capacity: 2, isActive: true,
+    description: 'Small quiet room', amenities: ['Power outlets'] },
+  { id: 17, name: 'Studio Room 140', building: 'Architecture', floor: '1', capacity: 8, isActive: true,
+    description: 'Large tables for laying out drawings and models', amenities: ['Accessible', 'Power outlets', 'Whiteboard'] },
+  { id: 18, name: 'Review Room 250', building: 'Architecture', floor: '2', capacity: 10, isActive: true,
+    description: 'Room with a display for project critiques', amenities: ['TV / HDMI', 'Webcam', 'Whiteboard'] },
+  { id: 19, name: 'Study Lounge A', building: 'University College', floor: '1', capacity: 6, isActive: true,
+    description: 'Lounge for late-night group study', amenities: ['Accessible', 'Power outlets', 'Whiteboard'] },
+  { id: 20, name: 'Study Lounge B', building: 'University College', floor: '2', capacity: 4, isActive: true,
+    description: 'Smaller, quieter lounge', amenities: ['Power outlets'] },
+  { id: 21, name: 'Study Room 1A', building: 'University Village', floor: '1', capacity: 4, isActive: true,
+    description: 'Quiet room near the front desk', amenities: ['Power outlets'] },
+  { id: 22, name: 'Study Room 1B', building: 'University Village', floor: '1', capacity: 6, isActive: true,
+    description: 'Group room with a whiteboard wall', amenities: ['Power outlets', 'Whiteboard'] },
+  { id: 23, name: 'Media Room', building: 'University Village', floor: '1', capacity: 8, isActive: true,
+    description: 'Room with a big screen for group presentations', amenities: ['Accessible', 'TV / HDMI', 'Webcam'] },
 ];
 
 // Test accounts. Password for both: password123
