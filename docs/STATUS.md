@@ -38,7 +38,7 @@ Also done today:
 | The web app had no local env file | It's git-ignored, so a fresh clone doesn't include it | Created it from `web/.env.example` |
 | The first request through Vite's `/api` proxy timed out | Vite was still starting up | Retried: later requests answered in 14–80 ms. Nothing to change. |
 | The first campus photo looked blurry | It was only 250×180 | Upscaled it, then replaced it with a full-size photo, compressed from 3.5 MB to 384 KB |
-| Signed-in pages, they need a logged-in session | Checked them by hand in the browser instead |
+| Signed-in pages, they need a logged-in session | Checked them by hand in the browser instead | Review DB Logs
 
 ## Next steps (in order)
 
@@ -46,6 +46,6 @@ Also done today:
 2.. **Sprint 2 (Oct 15–28):** stories 6–10 (book a room, my bookings, cancel, find open rooms by time, change a booking).
 3. **Midterm requirements paper:** due Oct 22 at 5 p.m.
 4. **Security follow-up:** the web app's `npm audit` reports 2 moderate issues in `react-router` that ship with the app. The fix is an upgrade to react-router 7, a breaking change, so do it on its own branch. The other 5 issues are in dev-only tools.
-6. **Open questions from the project hub:** team review of the stories and adding them to Jira, hosting for the app and API, the GitHub for Jira app, how far ahead students can book, and the proposal fixes.
+5. **Open questions from the project hub:** team review of the stories and adding them to Jira, hosting for the app and API, the GitHub for Jira app, how far ahead students can book, and the proposal fixes.
 
 ## Notes
