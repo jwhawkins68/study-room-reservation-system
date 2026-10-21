@@ -128,12 +128,15 @@ code { font-size: 0.9em; background: var(--gold-tint); padding: 0.05em 0.3em; bo
 .mock-banner { margin: 0; padding: 0.45rem clamp(1rem, 4vw, 2rem); background: var(--gold-tint); font-size: 0.9rem; text-align: center; }
 
 .shell { min-height: 100%; display: flex; flex-direction: column; }
-/* Signed-in pages: the login page's faint purple-to-gold gradient, pinned to the window */
+/* Signed-in pages: campus photo tinted by the purple-to-gold gradient (multiply),
+   under a white veil so it stays a faint backdrop. Pinned to the window. */
 .shell--signed-in {
   background:
-    linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+    linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)) fixed,
     url('./assets/login-gradient.jpg') center / cover no-repeat fixed,
+    url('./assets/campus.jpg') center / cover no-repeat fixed,
     var(--paper);
+  background-blend-mode: normal, multiply, normal;
 }
 /* On the gradient, boxes go white with a soft purple shadow so they stand out */
 .shell--signed-in .stat,
