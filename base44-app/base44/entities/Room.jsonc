@@ -1,0 +1,72 @@
+{
+  "name": "Room",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Room name, e.g. Study Room 101"
+    },
+    "building": {
+      "type": "string",
+      "description": "Building name, e.g. Library"
+    },
+    "floor": {
+      "type": "string",
+      "description": "Floor label"
+    },
+    "capacity": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Seats"
+    },
+    "description": {
+      "type": "string"
+    },
+    "amenities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Whiteboard",
+          "TV / HDMI",
+          "Power outlets",
+          "Webcam",
+          "Accessible"
+        ]
+      },
+      "description": "Room features"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "false = closed, hidden from students, can't be booked"
+    }
+  },
+  "required": [
+    "name",
+    "building",
+    "capacity"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "id": "{{user.id}}"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "name": "Reservation",
+  "type": "object",
+  "properties": {
+    "room_id": {
+      "type": "string",
+      "description": "Room id"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Booker's user id"
+    },
+    "user_email": {
+      "type": "string",
+      "format": "email"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Booker's name, shown to staff only"
+    },
+    "starts_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ends_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "party_size": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1
+    },
+    "purpose": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "confirmed",
+        "cancelled"
+      ],
+      "default": "confirmed"
+    },
+    "cancelled_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "room_id",
+    "user_id",
+    "starts_at",
+    "ends_at"
+  ],
+  "rls": {
+    "read": {
+      "data.user_id": "{{user.id}}"
+    },
+    "create": false,
+    "update": false,
+    "delete": false
+  }
+}
