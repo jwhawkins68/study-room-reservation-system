@@ -1,0 +1,21 @@
+{
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "The role of the user in the app. SRRS: \"admin\" = staff, \"user\" = student",
+      "enum": [
+        "admin",
+        "user"
+      ]
+    },
+    "student_id": {
+      "type": "string",
+      "description": "PVAMU student ID, e.g. P00123456 (unique; empty for staff). SRRS-1"
+    }
+  },
+  "required": [
+    "role"
+  ],
+  "name": "User",
+  "type": "object"
+}
