@@ -1,9 +1,11 @@
-// SRRS-6: book a room under my name.
+// SRRS-6: book a room under my name. SRRS-15: staff can book too (same rules).
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 import {
-  RuleError, errorResponse, requireUser, isStaff, parseWindow, loadRoom,
-  checkRules, conflicts, logAttempt, toReservation,
+  RuleError, errorResponse, requireUser, roleOf, parseWindow, loadRoom,
+  checkRules, conflicts, logAttempt, logEvent, toReservation,
 } from '../../shared/booking.ts';
+
+const RULES = ['ROOM_TAKEN', 'ROOM_BLOCKED', 'OVER_CAPACITY', 'TOO_LONG', 'IN_PAST', 'ROOM_INACTIVE'];
 
 export default async function (req: Request): Promise<Response> {
   const base44 = createClientFromRequest(req);
@@ -13,7 +15,6 @@ export default async function (req: Request): Promise<Response> {
   try {
     user = await requireUser(base44);
     body = await req.json().catch(() => ({}));
-    if (isStaff(user)) throw new RuleError('FORBIDDEN', 'Only students can book rooms.', 403);
 
     const { roomId, start, end } = body;
     const partySize = Number(body.partySize ?? 1);
@@ -30,6 +31,8 @@ export default async function (req: Request): Promise<Response> {
       user_id: user.id,
       user_email: user.email,
       user_name: user.full_name || user.email,
+      booker_role: roleOf(user),
+      booker_student_id: user.student_id || undefined,
       starts_at: new Date(s).toISOString(),
       ends_at: new Date(e).toISOString(),
       party_size: partySize,
@@ -44,9 +47,9 @@ export default async function (req: Request): Promise<Response> {
       throw new RuleError('ROOM_TAKEN', 'That time is already booked. Pick another time.');
     }
 
+    await logEvent(sr, { reservation: created, room, actor: user, action: 'created', after: created });
     return Response.json(toReservation(created, room), { status: 201 });
   } catch (err) {
-    const RULES = ['ROOM_TAKEN', 'ROOM_BLOCKED', 'OVER_CAPACITY', 'TOO_LONG', 'IN_PAST', 'ROOM_INACTIVE'];
     if (err instanceof RuleError && user && RULES.includes(err.code)) {
       await logAttempt(sr, user.id, body.roomId, body.start, body.end, err.code);
     }

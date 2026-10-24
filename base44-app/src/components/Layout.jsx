@@ -8,7 +8,7 @@ export default function Layout({ children }) {
   const isStaff = user?.role === 'staff';
 
   return (
-    <div className={user ? 'shell shell--signed-in' : 'shell'}>
+    <div className={user ? `shell shell--signed-in${isStaff ? ' shell--staff' : ''}` : 'shell'}>
       <a href="#main" className="skip-link">Skip to main content</a>
       <div className="utility">
         <div className="utility-inner">
@@ -26,7 +26,11 @@ export default function Layout({ children }) {
         <div className="masthead-inner">
           <Link to={user ? homeFor(user) : '/'} className="site-title">
             Study Room Reservations
-            {isStaff && <span className="portal-tag">Staff portal</span>}
+            {isStaff && (
+              <span className="portal-tag">
+                {user.staffRole === 'coordinator' ? `Coordinator: ${user.buildings.join(', ')}` : 'Staff portal'}
+              </span>
+            )}
           </Link>
           <nav className="mainnav" aria-label="Main">
             {!user && (
@@ -41,7 +45,16 @@ export default function Layout({ children }) {
                 <NavLink to="/student/rooms">Find a room</NavLink>
               </>
             )}
-            {isStaff && <NavLink to="/staff" end>Rooms</NavLink>}
+            {isStaff && (
+              <>
+                <NavLink to="/staff" end>Admin center</NavLink>
+                <NavLink to="/staff/rooms">Rooms</NavLink>
+                <NavLink to="/staff/book">Book a room</NavLink>
+                <NavLink to="/staff/bookings">My bookings</NavLink>
+                <NavLink to="/staff/audit">Audit log</NavLink>
+                {user.staffRole === 'system_admin' && <NavLink to="/staff/team">Coordinators</NavLink>}
+              </>
+            )}
           </nav>
         </div>
       </header>

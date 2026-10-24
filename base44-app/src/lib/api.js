@@ -65,11 +65,11 @@ export const api = {
   },
 
   // SRRS-5: room details + busy times for a range. Staff also get who booked.
-  room: async (id, { from, to }, { excludeId } = {}) => {
-    const rows = await entity(base44.entities.Room.filter({ id }, undefined, 1));
-    if (!rows[0] || rows[0].is_active === false) throw new ApiError(404, 'NOT_FOUND', 'That room doesn’t exist or is closed.');
+  room: async (id, { from, to }, { excludeId, includeClosed } = {}) => {
+    const room = (await allRooms()).find((r) => r.id === id);
+    if (!room || (!room.isActive && !includeClosed)) throw new ApiError(404, 'NOT_FOUND', 'That room doesn’t exist or is closed.');
     const { busy } = await call('room-schedule', { roomId: id, from, to, excludeId });
-    return { ...toRoom(rows[0]), busy };
+    return { ...room, busy };
   },
 
   // SRRS-6
@@ -95,6 +95,7 @@ export const api = {
       purpose: r.purpose,
       status: r.status,
       cancelledAt: r.cancelled_at,
+      cancelReason: r.cancel_reason,
     }));
     if (scope === 'past') {
       return shaped
@@ -107,10 +108,19 @@ export const api = {
   },
 
   // SRRS-8
-  cancelReservation: (id) => call('cancel-booking', { id }),
+  cancelReservation: (id, reason) => call('cancel-booking', { id, reason }),
 
   // SRRS-10
   updateReservation: (id, { start, end }) => call('change-booking', { id, start, end }),
+
+  // Sprint 3 staff tools
+  allRooms, // includes closed rooms (SRRS-12)
+  adminOverview: (body) => call('admin-overview', body), // SRRS-11
+  manageRoom: (body) => call('manage-room', body), // SRRS-12
+  manageBlock: (body) => call('manage-block', body), // SRRS-12
+  auditLog: (body) => call('audit-log', body), // SRRS-14
+  staffList: () => call('manage-staff', { action: 'list' }), // SRRS-13
+  updateStaff: (body) => call('manage-staff', { action: 'update', ...body }), // SRRS-13
 
   // SRRS-1 profile step
   completeProfile: (body) => call('complete-profile', body),

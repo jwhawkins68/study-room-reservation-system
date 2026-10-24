@@ -32,6 +32,54 @@ export async function requireUser(base44: any) {
 }
 
 export const isStaff = (user: any) => user?.role === 'admin';
+export const roleOf = (user: any) => (isStaff(user) ? 'staff' : 'student');
+
+// SRRS-13: staff are system admins (every building) unless marked coordinator for specific buildings.
+export function staffScope(user: any) {
+  if (!isStaff(user)) return null;
+  if (user.staff_role === 'coordinator') return { all: false, buildings: (user.buildings || []) as string[] };
+  return { all: true, buildings: [] as string[] };
+}
+export const inScope = (scope: any, building: string) => !!scope && (scope.all || scope.buildings.includes(building));
+
+export function requireStaff(user: any) {
+  const scope = staffScope(user);
+  if (!scope) throw new RuleError('FORBIDDEN', 'Staff only.', 403);
+  return scope;
+}
+
+export function requireRoomScope(scope: any, room: any) {
+  if (!inScope(scope, room.building)) {
+    throw new RuleError('FORBIDDEN', `You manage ${scope.buildings.join(', ') || 'no buildings'}, not ${room.building}.`, 403);
+  }
+}
+
+// SRRS-14: append one audit row. Best effort: never blocks the response.
+export async function logEvent(
+  sr: any,
+  e: { reservation: any; room?: any; actor: any; action: string; before?: any; after?: any; note?: string },
+) {
+  try {
+    await sr.entities.BookingEvent.create({
+      reservation_id: e.reservation.id,
+      room_id: e.reservation.room_id,
+      room_name: e.room?.name,
+      building: e.room?.building,
+      action: e.action,
+      actor_id: e.actor.id,
+      actor_name: e.actor.full_name || e.actor.email,
+      actor_role: roleOf(e.actor),
+      booker_name: e.reservation.user_name,
+      old_starts_at: e.before?.starts_at,
+      old_ends_at: e.before?.ends_at,
+      new_starts_at: e.after?.starts_at,
+      new_ends_at: e.after?.ends_at,
+      note: e.note,
+    });
+  } catch (err) {
+    console.warn('Could not write audit event:', err);
+  }
+}
 
 const ms = (v: unknown) => (typeof v === 'string' ? Date.parse(v) : NaN);
 
