@@ -135,6 +135,9 @@ export default function Dashboard() {
 
   const first = user?.fullName?.split(' ')[0] || 'there';
   const list = tab === 'upcoming' ? upcoming : past;
+  // SRRS-15: staff use the same bookings page under /staff
+  const isStaff = user?.role === 'staff';
+  const roomsPath = isStaff ? '/staff/book' : '/student/rooms';
 
   return (
     <>
@@ -151,15 +154,15 @@ export default function Dashboard() {
           <dd>{roomCount ?? '–'}</dd>
         </div>
         <div className="stat">
-          <dt>Student ID</dt>
-          <dd className="stat-text">{user?.studentId || '–'}</dd>
+          <dt>{isStaff ? 'Account' : 'Student ID'}</dt>
+          <dd className="stat-text">{isStaff ? 'Staff' : user?.studentId || '–'}</dd>
         </div>
       </dl>
 
       <section aria-labelledby="bookings-heading" className="panel">
         <div className="panel-head">
           <h2 id="bookings-heading">My bookings</h2>
-          <Link to="/student/rooms" className="btn btn--primary">Find a room</Link>
+          <Link to={roomsPath} className="btn btn--primary">{isStaff ? 'Book a room' : 'Find a room'}</Link>
         </div>
         <div className="segmented" role="tablist" aria-label="Which bookings">
           {[['upcoming', 'Upcoming'], ['past', 'Past and cancelled']].map(([k, label]) => (
@@ -174,7 +177,7 @@ export default function Dashboard() {
         {list && list.length === 0 && (
           <div className="empty">
             <p>{tab === 'upcoming' ? 'You don’t have any upcoming bookings.' : 'No past bookings yet.'}</p>
-            {tab === 'upcoming' && <Link to="/student/rooms">Browse rooms</Link>}
+            {tab === 'upcoming' && <Link to={roomsPath}>Browse rooms</Link>}
           </div>
         )}
         {list && list.length > 0 && (
@@ -186,8 +189,9 @@ export default function Dashboard() {
                   <span>{fmtTime(new Date(r.start))} – {fmtTime(new Date(r.end))}</span>
                 </div>
                 <div className="booking-main">
-                  <Link to={`/student/rooms/${r.roomId}`} className="booking-room">{r.roomName}</Link>
+                  <Link to={`${roomsPath}/${r.roomId}`} className="booking-room">{r.roomName}</Link>
                   <p className="muted">{r.building ? `${r.building}. ` : ''}Group of {r.partySize}{r.purpose ? `. ${r.purpose}` : ''}</p>
+                  {r.status === 'cancelled' && r.cancelReason && <p className="muted">Cancelled: {r.cancelReason}</p>}
                   {changing === r.id && (
                     <ChangeTime
                       booking={r}

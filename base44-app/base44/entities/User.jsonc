@@ -11,6 +11,21 @@
     "student_id": {
       "type": "string",
       "description": "PVAMU student ID, e.g. P00123456 (unique; empty for staff). SRRS-1"
+    },
+    "staff_role": {
+      "type": "string",
+      "enum": [
+        "system_admin",
+        "coordinator"
+      ],
+      "description": "SRRS-13: for staff (role admin). Empty = system admin."
+    },
+    "buildings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "SRRS-13: buildings a coordinator manages"
     }
   },
   "required": [

@@ -39,5 +39,17 @@ const a = await sr.entities.Reservation.create({ room_id: room.id, starts_at: is
 const b = await sr.entities.Reservation.create({ room_id: room.id, starts_at: iso(t0 + 30.5 * H), ends_at: iso(t0 + 31.5 * H), status: 'confirmed' });
 const ca = (await B.conflicts(sr, room.id, t0 + 30 * H, t0 + 31 * H, a.id)).length, cb = (await B.conflicts(sr, room.id, t0 + 30.5 * H, t0 + 31.5 * H, b.id)).length;
 res.push(['race: both see the clash and undo', ca && cb ? 'BOTH_UNDO' : 'MISSED', 'BOTH_UNDO']);
+// SRRS-13: staff scope (system admin vs room coordinator)
+const code = (f) => { try { f(); return 'OK'; } catch (e) { return e.code; } };
+const sysAdmin = { role: 'admin' }, coord = { role: 'admin', staff_role: 'coordinator', buildings: ['Library'] }, student = { role: 'user' };
+const lib = { building: 'Library' }, collins = { building: 'Collins Engineering' };
+res.push(['scope: student has no staff scope', B.staffScope(student) === null ? 'NULL' : 'SCOPE', 'NULL']);
+res.push(['scope: student blocked from staff actions', code(() => B.requireStaff(student)), 'FORBIDDEN']);
+res.push(['scope: system admin manages any building', code(() => B.requireRoomScope(B.staffScope(sysAdmin), collins)), 'OK']);
+res.push(['scope: coordinator manages own building', code(() => B.requireRoomScope(B.staffScope(coord), lib)), 'OK']);
+res.push(['scope: coordinator blocked elsewhere', code(() => B.requireRoomScope(B.staffScope(coord), collins)), 'FORBIDDEN']);
+res.push(['scope: coordinator with no buildings', code(() => B.requireRoomScope(B.staffScope({ ...coord, buildings: [] }), lib)), 'FORBIDDEN']);
+res.push(['roleOf staff', B.roleOf(sysAdmin), 'staff']);
+res.push(['roleOf student', B.roleOf(student), 'student']);
 let fail = 0; for (const [name, got, want] of res) { const ok = got === want; if (!ok) fail++; console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}: ${got}${ok ? '' : ' (expected ' + want + ')'}`); }
 console.log(fail ? `${fail} failed` : `all ${res.length} passed`);

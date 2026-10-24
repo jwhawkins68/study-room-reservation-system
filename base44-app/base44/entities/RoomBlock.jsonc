@@ -1,3 +1,4 @@
+// SRRS-12: staff closures for a time period. Written only by the manage-block function (building scope checked there).
 {
   "name": "RoomBlock",
   "type": "object",
@@ -16,6 +17,9 @@
     },
     "reason": {
       "type": "string"
+    },
+    "created_by_name": {
+      "type": "string"
     }
   },
   "required": [
@@ -24,25 +28,9 @@
     "ends_at"
   ],
   "rls": {
-    "read": {
-      "user_condition": {
-        "id": "{{user.id}}"
-      }
-    },
-    "create": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
-    "update": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
-    "delete": {
-      "user_condition": {
-        "role": "admin"
-      }
-    }
+    "read": true,
+    "create": false,
+    "update": false,
+    "delete": false
   }
 }

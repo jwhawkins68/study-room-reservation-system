@@ -9,7 +9,7 @@ Students find and reserve study rooms; staff manage rooms and closures.
 | `api/` | Node/Express API (next up) |
 | `db/` | Supabase/Postgres schema; later, conflict tests and demo data |
 | `docs/` | Project hub snapshot, plus Stephanie's Sprint 1 HTML prototype in `docs/prototypes/` |
-| `base44-app/` | Base44 version of Sprints 1–2 (SRRS-1 to 10), using the same React pages. See its README |
+| `base44-app/` | Base44 version of Sprints 1–3 (SRRS-1 to 16), using the same React pages. See its README |
 
 ## Stack
 

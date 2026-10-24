@@ -9,7 +9,10 @@ import CompleteProfile from './pages/CompleteProfile';
 import Dashboard from './pages/Dashboard';
 import Rooms from './pages/Rooms';
 import RoomDetail from './pages/RoomDetail';
-import StaffHome from './pages/StaffHome';
+import AdminCenter from './pages/AdminCenter';
+import ManageRooms from './pages/ManageRooms';
+import AuditLog from './pages/AuditLog';
+import ManageStaff from './pages/ManageStaff';
 
 function Fallback() {
   const { user, loading } = useAuth();
@@ -29,14 +32,20 @@ export default function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/complete-profile" element={<CompleteProfile />} />
 
-      {/* Student portal */}
+      {/* Student portal (Sprints 1-2) */}
       <Route path="/student" element={student(<Dashboard />)} />
       <Route path="/student/rooms" element={student(<Rooms basePath="/student/rooms" />)} />
       <Route path="/student/rooms/:id" element={student(<RoomDetail backPath="/student/rooms" canBook />)} />
 
-      {/* Staff portal */}
-      <Route path="/staff" element={staff(<StaffHome />)} />
-      <Route path="/staff/rooms/:id" element={staff(<RoomDetail backPath="/staff" />)} />
+      {/* Staff portal (Sprint 3) */}
+      <Route path="/staff" element={staff(<AdminCenter />)} />
+      <Route path="/staff/rooms" element={staff(<ManageRooms />)} />
+      <Route path="/staff/rooms/:id" element={staff(<RoomDetail backPath="/staff/rooms" staffView />)} />
+      <Route path="/staff/book" element={staff(<Rooms basePath="/staff/book" />)} />
+      <Route path="/staff/book/:id" element={staff(<RoomDetail backPath="/staff/book" canBook />)} />
+      <Route path="/staff/bookings" element={staff(<Dashboard />)} />
+      <Route path="/staff/audit" element={staff(<AuditLog />)} />
+      <Route path="/staff/team" element={staff(<ManageStaff />)} />
 
       <Route path="*" element={<Fallback />} />
     </Routes>

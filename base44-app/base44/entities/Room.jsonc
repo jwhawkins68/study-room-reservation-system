@@ -1,3 +1,4 @@
+// SRRS-4, 5, 12. Anyone can read rooms; only the manage-room function writes (it checks staff and building scope, SRRS-13).
 {
   "name": "Room",
   "type": "object",
@@ -48,25 +49,9 @@
     "capacity"
   ],
   "rls": {
-    "read": {
-      "user_condition": {
-        "id": "{{user.id}}"
-      }
-    },
-    "create": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
-    "update": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
-    "delete": {
-      "user_condition": {
-        "role": "admin"
-      }
-    }
+    "read": true,
+    "create": false,
+    "update": false,
+    "delete": false
   }
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../lib/api';
 import DayStrip, { buildSlots, openWindows, fmtTime } from '../components/DayStrip';
@@ -143,14 +143,17 @@ function BookingPanel({ room, slots, onBooked }) {
   );
 }
 
-// Staff portal (Story 3): the day's bookings with who booked. Students never get these details from the server.
+const fmtStamp = (iso) => (iso ? new Date(iso).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '–');
+
+// SRRS-16: the day's bookings with who booked and whether they're a student or staff. Students never get these details.
 function StaffBookings({ busy }) {
-  const items = busy.filter((b) => b.booking || b.kind === 'blocked');
+  const items = busy.filter((b) => b.booking);
+  const [open, setOpen] = useState(null);
   return (
-    <section aria-labelledby="who-heading" className="panel">
-      <h3 id="who-heading">Bookings this day</h3>
+    <section aria-labelledby="who-heading" className="panel staff-panel">
+      <h3 id="who-heading">Who booked this day</h3>
       {items.length === 0 ? (
-        <p className="muted">No bookings or closures on this day.</p>
+        <p className="muted">No bookings on this day.</p>
       ) : (
         <div className="table-wrap">
           <table className="table">
@@ -158,24 +161,40 @@ function StaffBookings({ busy }) {
               <tr>
                 <th scope="col">Time</th>
                 <th scope="col">Booked by</th>
+                <th scope="col">Type</th>
                 <th scope="col" className="num">Group</th>
-                <th scope="col">Purpose</th>
+                <th scope="col"><span className="sr-only">Details</span></th>
               </tr>
             </thead>
             <tbody>
               {items.map((b) => (
-                <tr key={`${b.start}-${b.kind}`}>
-                  <td>{fmtTime(new Date(b.start))} – {fmtTime(new Date(b.end))}</td>
-                  {b.kind === 'blocked' ? (
-                    <td colSpan={3}>Closed by staff{b.reason ? `: ${b.reason}` : ''}</td>
-                  ) : (
-                    <>
-                      <td>{b.booking.name}<br /><small className="muted">{b.booking.email}</small></td>
-                      <td className="num">{b.booking.partySize}</td>
-                      <td>{b.booking.purpose || '–'}</td>
-                    </>
+                <Fragment key={b.booking.id}>
+                  <tr>
+                    <td>{fmtTime(new Date(b.start))} – {fmtTime(new Date(b.end))}</td>
+                    <td>{b.booking.name}<br /><small className="muted">{b.booking.email}</small></td>
+                    <td><span className={`role-badge role-badge--${b.booking.role}`}>{b.booking.role === 'staff' ? 'Staff' : 'Student'}</span></td>
+                    <td className="num">{b.booking.partySize}</td>
+                    <td>
+                      <button type="button" className="link-btn" aria-expanded={open === b.booking.id}
+                        onClick={() => setOpen(open === b.booking.id ? null : b.booking.id)}>
+                        {open === b.booking.id ? 'Hide details' : 'Details'}
+                      </button>
+                    </td>
+                  </tr>
+                  {open === b.booking.id && (
+                    <tr className="detail-row">
+                      <td colSpan={5}>
+                        <dl className="details">
+                          <div><dt>Name</dt><dd>{b.booking.name}</dd></div>
+                          {b.booking.role === 'student' && <div><dt>Student ID</dt><dd>{b.booking.studentId || '–'}</dd></div>}
+                          <div><dt>Group size</dt><dd>{b.booking.partySize}</dd></div>
+                          <div><dt>Purpose</dt><dd>{b.booking.purpose || '–'}</dd></div>
+                          <div><dt>Booked</dt><dd>{fmtStamp(b.booking.bookedAt)}</dd></div>
+                        </dl>
+                      </td>
+                    </tr>
                   )}
-                </tr>
+                </Fragment>
               ))}
             </tbody>
           </table>
@@ -185,8 +204,88 @@ function StaffBookings({ busy }) {
   );
 }
 
+// SRRS-12: block off times with a reason; students can't book them. Existing bookings in the way are listed first.
+const HALF_HOURS = Array.from({ length: 29 }, (_, i) => {
+  const mins = 8 * 60 + i * 30;
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return { value: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`, label: `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'a.m.' : 'p.m.'}` };
+});
+
+function BlockPanel({ room, date, busy, onChange }) {
+  const [from, setFrom] = useState('08:00');
+  const [to, setTo] = useState('22:00');
+  const [reason, setReason] = useState('');
+  const [busyFlag, setBusyFlag] = useState(false);
+  const [error, setError] = useState('');
+  const [conflict, setConflict] = useState(null);
+  const [done, setDone] = useState('');
+  const blocks = busy.filter((b) => b.kind === 'blocked');
+  const at = (hhmm) => { const [y, mo, d] = date.split('-').map(Number); const [h, mi] = hhmm.split(':').map(Number); return new Date(y, mo - 1, d, h, mi).toISOString(); };
+
+  async function save(cancelAffected = false) {
+    setError(''); setDone(''); setBusyFlag(true);
+    try {
+      const res = await api.manageBlock({ action: 'create', roomId: room.id, start: at(from), end: at(to), reason: reason.trim(), cancelAffected });
+      setConflict(null); setReason('');
+      setDone(`Closed ${fmtTime(new Date(at(from)))} – ${fmtTime(new Date(at(to)))}.${res.cancelled ? ` ${res.cancelled} booking${res.cancelled === 1 ? ' was' : 's were'} cancelled.` : ''}`);
+      onChange();
+    } catch (e) {
+      if (e.code === 'BLOCK_CONFLICT') setConflict(e.details || []);
+      else setError(e.message);
+    } finally {
+      setBusyFlag(false);
+    }
+  }
+
+  async function remove(id) {
+    setError(''); setDone('');
+    try { await api.manageBlock({ action: 'delete', id }); setDone('Closure removed. Those times are open again.'); onChange(); } catch (e) { setError(e.message); }
+  }
+
+  return (
+    <section aria-labelledby="block-heading" className="panel staff-panel">
+      <h3 id="block-heading">Block off time</h3>
+      {blocks.length > 0 && (
+        <ul className="block-list">
+          {blocks.map((b) => (
+            <li key={b.blockId || b.start}>
+              <span><strong>{fmtTime(new Date(b.start))} – {fmtTime(new Date(b.end))}</strong> {b.reason}{b.blockedBy ? ` (by ${b.blockedBy})` : ''}</span>
+              {b.blockId && <button type="button" className="btn btn--quiet" onClick={() => remove(b.blockId)}>Remove</button>}
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="booking-fields block-fields">
+        <label className="field"><span>From</span>
+          <select value={from} onChange={(e) => setFrom(e.target.value)}>{HALF_HOURS.slice(0, -1).map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}</select>
+        </label>
+        <label className="field"><span>To</span>
+          <select value={to} onChange={(e) => setTo(e.target.value)}>{HALF_HOURS.slice(1).map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}</select>
+        </label>
+        <label className="field field--wide"><span>Reason</span>
+          <input value={reason} maxLength={200} onChange={(e) => setReason(e.target.value)} placeholder="e.g. HVAC repair" />
+        </label>
+      </div>
+      {conflict && (
+        <div className="confirm-inline" role="alertdialog" aria-label="Bookings in the way">
+          <p>{conflict.length} booking{conflict.length === 1 ? ' is' : 's are'} already in that period:</p>
+          <ul>{conflict.map((c) => <li key={c.id}>{fmtTime(new Date(c.start))} – {fmtTime(new Date(c.end))}, {c.name} ({c.role})</li>)}</ul>
+          <div className="actions">
+            <button type="button" className="btn btn--primary" disabled={busyFlag} onClick={() => save(true)}>Close anyway and cancel {conflict.length === 1 ? 'it' : 'them'}</button>
+            <button type="button" className="btn btn--quiet" onClick={() => setConflict(null)}>Go back</button>
+          </div>
+        </div>
+      )}
+      {error && <p className="form-error" role="alert">{error}</p>}
+      {done && <p className="confirm-box" role="status">{done}</p>}
+      {!conflict && <button type="button" className="btn btn--primary" disabled={busyFlag || !reason.trim()} onClick={() => save(false)}>{busyFlag ? 'Saving…' : 'Block this time'}</button>}
+    </section>
+  );
+}
+
 // Story 5: see a room's details and which times are taken or blocked. Never shows who booked.
-export default function RoomDetail({ backPath = '/student/rooms', canBook = false }) {
+export default function RoomDetail({ backPath = '/student/rooms', canBook = false, staffView = false }) {
   const { id } = useParams();
   const [date, setDate] = useState(todayStr());
   const [room, setRoom] = useState(null);
@@ -196,7 +295,7 @@ export default function RoomDetail({ backPath = '/student/rooms', canBook = fals
   useEffect(() => {
     let active = true;
     setError('');
-    api.room(id, dayRange(date)).then((r) => active && setRoom(r)).catch((e) => active && setError(e.message));
+    api.room(id, dayRange(date), { includeClosed: staffView }).then((r) => active && setRoom(r)).catch((e) => active && setError(e.message));
     return () => { active = false; };
   }, [id, date, version]);
 
@@ -221,7 +320,7 @@ export default function RoomDetail({ backPath = '/student/rooms', canBook = fals
       <Link to={backPath} className="back">Back to rooms</Link>
       <header className="room-head">
         <div>
-          <h1>{room.name}</h1>
+          <h1>{room.name}{!room.isActive && <span className="badge badge--closed"> Closed</span>}</h1>
           <p className="muted">{room.building}, floor {room.floor}. Seats {room.capacity}.</p>
           <p>{room.description}</p>
           <p className="room-tags">{room.amenities.join(', ')}</p>
@@ -234,7 +333,7 @@ export default function RoomDetail({ backPath = '/student/rooms', canBook = fals
 
       <section aria-labelledby="times-heading" className="times">
         <h2 id="times-heading">{dayLabel}</h2>
-        <DayStrip slots={slots} />
+        <DayStrip slots={slots} showStaff={staffView} />
         <h3>Open times</h3>
         {windows.length === 0 ? (
           <p className="muted">No open times left on this day. Try another day.</p>
@@ -245,8 +344,9 @@ export default function RoomDetail({ backPath = '/student/rooms', canBook = fals
             ))}
           </ul>
         )}
-        {canBook && <BookingPanel key={date} room={room} slots={slots} onBooked={refresh} />}
-        {!canBook && <StaffBookings busy={room.busy} />}
+        {canBook && room.isActive && <BookingPanel key={date} room={room} slots={slots} onBooked={refresh} />}
+        {staffView && <StaffBookings busy={room.busy} />}
+        {staffView && <BlockPanel key={date} room={room} date={date} busy={room.busy} onChange={refresh} />}
       </section>
     </>
   );
