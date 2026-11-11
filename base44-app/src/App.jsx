@@ -12,6 +12,7 @@ import RoomDetail from './pages/RoomDetail';
 import AdminCenter from './pages/AdminCenter';
 import ManageRooms from './pages/ManageRooms';
 import AuditLog from './pages/AuditLog';
+import Assistant from './pages/Assistant';
 import ManageStaff from './pages/ManageStaff';
 
 function Fallback() {
@@ -35,6 +36,7 @@ export default function App() {
       {/* Student portal (Sprints 1-2) */}
       <Route path="/student" element={student(<Dashboard />)} />
       <Route path="/student/rooms" element={student(<Rooms basePath="/student/rooms" />)} />
+      <Route path="/student/assistant" element={student(<Assistant />)} />
       <Route path="/student/rooms/:id" element={student(<RoomDetail backPath="/student/rooms" canBook />)} />
 
       {/* Staff portal (Sprint 3) */}
@@ -45,6 +47,7 @@ export default function App() {
       <Route path="/staff/book/:id" element={staff(<RoomDetail backPath="/staff/book" canBook />)} />
       <Route path="/staff/bookings" element={staff(<Dashboard />)} />
       <Route path="/staff/audit" element={staff(<AuditLog />)} />
+      <Route path="/staff/assistant" element={staff(<Assistant />)} />
       <Route path="/staff/team" element={staff(<ManageStaff />)} />
 
       <Route path="*" element={<Fallback />} />

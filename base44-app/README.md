@@ -1,7 +1,7 @@
 # SRRS on Base44 (Sprints 1–3)
 
 A second version of the Study Room Reservation System that runs on [Base44](https://base44.com) instead of Supabase + Express.
-It covers Jira stories **SRRS-1 to SRRS-16** (Sprints 1–3) and reuses the React pages from `web/`, so it looks and behaves the same.
+It covers Jira stories **SRRS-1 to SRRS-18** (Sprints 1–3) and reuses the React pages from `web/`, so it looks and behaves the same.
 
 - **Live app:** https://study-room-reservation-system-5f98d0e0.base44.app
 - **Base44 editor:** https://app.base44.com/apps/6adc01e69e59ba9d5f98d0e0/editor/preview (owner access)
@@ -43,6 +43,10 @@ were rewritten to talk to Base44, with the same function names and data shapes.
 | SRRS-14 Booking audit log | `BookingEvent` entity, `logEvent` in `shared/booking.ts`, `pages/AuditLog.jsx`, function `audit-log` |
 | SRRS-15 Staff book rooms | `/staff/book` and `/staff/bookings` reuse `Rooms`, `RoomDetail` and `Dashboard`; `book-room` accepts staff |
 | SRRS-16 Who booked each slot | "Who booked this day" table with Student/Staff badge and details in `pages/RoomDetail.jsx`; `room-schedule` returns these fields to staff only |
+| SRRS-17 Add to Outlook | `components/AddToCalendar.jsx`, `lib/calendar.js`: Outlook on the web link or a `.ics` file, on My bookings and the booking confirmation |
+| SRRS-18 AI booking assistant | `pages/Assistant.jsx`, function `assistant`. The LLM (Base44 `InvokeLLM`) only reads the request; the function checks real availability, and **Book it** goes through `book-room`. Staff can ask for usage insights |
+
+Sign-up note: Base44 keeps `full_name` read-only for the app, so the name typed at sign-up is saved as `display_name` (SRRS-1).
 
 ## Booking rules
 

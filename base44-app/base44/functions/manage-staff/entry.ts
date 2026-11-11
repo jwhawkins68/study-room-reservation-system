@@ -1,7 +1,7 @@
 // SRRS-13: a system admin makes a staff member a room coordinator for one or more buildings
 // (a building can have several coordinators), or sets them back to system admin.
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
-import { RuleError, errorResponse, requireUser, requireStaff, isStaff } from '../../shared/booking.ts';
+import { RuleError, errorResponse, requireUser, requireStaff, isStaff, nameOf } from '../../shared/booking.ts';
 
 export default async function (req: Request): Promise<Response> {
   const base44 = createClientFromRequest(req);
@@ -29,7 +29,7 @@ export default async function (req: Request): Promise<Response> {
     const staff = users
       .filter((u: any) => isStaff(u))
       .map((u: any) => ({
-        id: u.id, name: u.full_name || u.email, email: u.email,
+        id: u.id, name: nameOf(u), email: u.email,
         staffRole: (body.action === 'update' && u.id === body.userId)
           ? (body.staffRole === 'coordinator' ? 'coordinator' : 'system_admin')
           : (u.staff_role || 'system_admin'),

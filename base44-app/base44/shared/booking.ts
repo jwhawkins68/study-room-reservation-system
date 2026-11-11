@@ -32,6 +32,8 @@ export async function requireUser(base44: any) {
 }
 
 export const isStaff = (user: any) => user?.role === 'admin';
+// SRRS-1: the name typed at sign-up lives in display_name; Base44's full_name can't be changed by the app.
+export const nameOf = (u: any) => u?.display_name || u?.full_name || u?.email || 'Unknown';
 export const roleOf = (user: any) => (isStaff(user) ? 'staff' : 'student');
 
 // SRRS-13: staff are system admins (every building) unless marked coordinator for specific buildings.
@@ -67,7 +69,7 @@ export async function logEvent(
       building: e.room?.building,
       action: e.action,
       actor_id: e.actor.id,
-      actor_name: e.actor.full_name || e.actor.email,
+      actor_name: nameOf(e.actor),
       actor_role: roleOf(e.actor),
       booker_name: e.reservation.user_name,
       old_starts_at: e.before?.starts_at,

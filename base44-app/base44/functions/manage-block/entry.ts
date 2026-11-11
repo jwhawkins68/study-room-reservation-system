@@ -2,7 +2,7 @@
 // (checked in shared/booking.ts). If bookings already sit in that period, staff see them first and can cancel them.
 // SRRS-13: coordinators only in their buildings.
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
-import { RuleError, errorResponse, requireUser, requireStaff, requireRoomScope, loadRoom, conflicts, logEvent } from '../../shared/booking.ts';
+import { RuleError, errorResponse, requireUser, requireStaff, requireRoomScope, loadRoom, conflicts, logEvent, nameOf } from '../../shared/booking.ts';
 
 export default async function (req: Request): Promise<Response> {
   const base44 = createClientFromRequest(req);
@@ -43,13 +43,13 @@ export default async function (req: Request): Promise<Response> {
     for (const r of affected) {
       await sr.entities.Reservation.update(r.id, {
         status: 'cancelled', cancelled_at: new Date().toISOString(),
-        cancelled_by_name: user.full_name || user.email, cancel_reason: `Room closed: ${reason}`,
+        cancelled_by_name: nameOf(user), cancel_reason: `Room closed: ${reason}`,
       });
       await logEvent(sr, { reservation: r, room, actor: user, action: 'cancelled', before: { starts_at: r.starts_at, ends_at: r.ends_at }, note: `Room closed: ${reason}` });
     }
     const block = await sr.entities.RoomBlock.create({
       room_id: room.id, starts_at: new Date(s).toISOString(), ends_at: new Date(e).toISOString(),
-      reason, created_by_name: user.full_name || user.email,
+      reason, created_by_name: nameOf(user),
     });
     return Response.json({ block, cancelled: affected.length }, { status: 201 });
   } catch (err) {

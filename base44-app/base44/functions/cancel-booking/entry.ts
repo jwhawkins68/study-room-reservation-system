@@ -1,7 +1,7 @@
 // SRRS-8: cancel a booking so the room opens up. Students cancel their own upcoming bookings.
 // SRRS-11: staff cancel any booking in the buildings they manage (SRRS-13), with an optional reason.
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
-import { RuleError, errorResponse, requireUser, staffScope, inScope, logEvent, toReservation } from '../../shared/booking.ts';
+import { RuleError, errorResponse, requireUser, staffScope, inScope, logEvent, toReservation, nameOf } from '../../shared/booking.ts';
 
 export default async function (req: Request): Promise<Response> {
   const base44 = createClientFromRequest(req);
@@ -24,7 +24,7 @@ export default async function (req: Request): Promise<Response> {
     const updated = await sr.entities.Reservation.update(r.id, {
       status: 'cancelled',
       cancelled_at: new Date().toISOString(),
-      cancelled_by_name: user.full_name || user.email,
+      cancelled_by_name: nameOf(user),
       cancel_reason: reason || undefined,
     });
     await logEvent(sr, {

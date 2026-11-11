@@ -2,7 +2,7 @@
 // each room's status (in use, booked up, open, closed), and rejected booking attempts.
 // Coordinators (SRRS-13) see only their buildings.
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
-import { RuleError, errorResponse, requireUser, requireStaff, inScope, overlaps } from '../../shared/booking.ts';
+import { RuleError, errorResponse, requireUser, requireStaff, inScope, overlaps, nameOf } from '../../shared/booking.ts';
 
 const SLOT = 30 * 60 * 1000;
 const t = (v: any) => Date.parse(v);
@@ -83,7 +83,7 @@ export default async function (req: Request): Promise<Response> {
       .slice(0, 200)
       .map((a: any) => {
         const room: any = roomById.get(a.room_id); const u: any = userById.get(a.user_id);
-        return { id: a.id, at: a.created_date, roomName: room?.name, building: room?.building, start: a.starts_at, end: a.ends_at, reason: a.reason_code, name: u?.full_name || u?.email || 'Unknown' };
+        return { id: a.id, at: a.created_date, roomName: room?.name, building: room?.building, start: a.starts_at, end: a.ends_at, reason: a.reason_code, name: nameOf(u) };
       });
 
     return Response.json({
