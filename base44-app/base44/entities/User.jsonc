@@ -8,6 +8,10 @@
         "user"
       ]
     },
+    "display_name": {
+      "type": "string",
+      "description": "Name the student typed at sign-up (Base44 keeps full_name read-only). SRRS-1"
+    },
     "student_id": {
       "type": "string",
       "description": "PVAMU student ID, e.g. P00123456 (unique; empty for staff). SRRS-1"

@@ -2,8 +2,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 import {
   RuleError, errorResponse, requireUser, roleOf, parseWindow, loadRoom,
-  checkRules, conflicts, logAttempt, logEvent, toReservation,
-} from '../../shared/booking.ts';
+  checkRules, conflicts, logAttempt, logEvent, toReservation, nameOf } from '../../shared/booking.ts';
 
 const RULES = ['ROOM_TAKEN', 'ROOM_BLOCKED', 'OVER_CAPACITY', 'TOO_LONG', 'IN_PAST', 'ROOM_INACTIVE'];
 
@@ -30,7 +29,7 @@ export default async function (req: Request): Promise<Response> {
       room_id: room.id,
       user_id: user.id,
       user_email: user.email,
-      user_name: user.full_name || user.email,
+      user_name: nameOf(user),
       booker_role: roleOf(user),
       booker_student_id: user.student_id || undefined,
       starts_at: new Date(s).toISOString(),

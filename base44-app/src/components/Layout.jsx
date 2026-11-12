@@ -43,6 +43,7 @@ export default function Layout({ children }) {
               <>
                 <NavLink to="/student" end>Dashboard</NavLink>
                 <NavLink to="/student/rooms">Find a room</NavLink>
+                <NavLink to="/student/assistant">Assistant</NavLink>
               </>
             )}
             {isStaff && (
@@ -52,6 +53,7 @@ export default function Layout({ children }) {
                 <NavLink to="/staff/book">Book a room</NavLink>
                 <NavLink to="/staff/bookings">My bookings</NavLink>
                 <NavLink to="/staff/audit">Audit log</NavLink>
+                <NavLink to="/staff/assistant">Assistant</NavLink>
                 {user.staffRole === 'system_admin' && <NavLink to="/staff/team">Coordinators</NavLink>}
               </>
             )}

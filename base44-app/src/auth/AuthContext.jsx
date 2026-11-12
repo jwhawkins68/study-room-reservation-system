@@ -9,7 +9,7 @@ const AuthContext = createContext(null);
 const toProfile = (u) =>
   u && {
     id: u.id,
-    fullName: u.full_name || '',
+    fullName: u.display_name || u.full_name || '',
     studentId: u.student_id || '',
     email: u.email,
     role: u.role === 'admin' ? 'staff' : 'student',

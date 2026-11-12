@@ -352,3 +352,32 @@ code { font-size: 0.9em; background: var(--gold-tint); padding: 0.05em 0.3em; bo
 .room-form { display: grid; gap: 0.75rem; padding: 1rem; margin-bottom: 1rem; background: var(--purple-tint); border-left: 4px solid var(--purple); }
 .room-form .chips { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .panel .link-btn, .table .link-btn { color: var(--purple); }
+
+/* SRRS-17 Add to Outlook */
+.cal-menu{position:relative;display:inline-block}
+.cal-options{position:absolute;right:0;top:calc(100% + 6px);z-index:20;min-width:280px;background:#fff;border:1px solid #d9d2e3;border-radius:10px;box-shadow:0 10px 30px rgba(43,27,63,.15);padding:6px;display:flex;flex-direction:column}
+.cal-menu:not(.cal-menu--compact) .cal-options{left:0;right:auto}
+.cal-option{display:block;text-align:left;padding:10px 12px;border-radius:8px;border:0;background:none;font:inherit;color:#2b1b3f;text-decoration:none;cursor:pointer}
+.cal-option:hover,.cal-option:focus-visible{background:#f3eef8}
+.cal-option .muted{font-size:.85em}
+
+/* SRRS-18 booking assistant */
+.ai-panel{display:flex;flex-direction:column;gap:14px}
+.ai-thread{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;max-height:560px;overflow-y:auto}
+.ai-msg p{margin:0}
+.ai-msg--user{align-self:flex-end;max-width:75%;background:#582c83;color:#fff;padding:10px 14px;border-radius:14px 14px 4px 14px}
+.ai-msg--bot{align-self:flex-start;max-width:92%;background:#f6f2fa;border:1px solid #e2d9ec;padding:12px 14px;border-radius:14px 14px 14px 4px}
+.ai-typing p{color:#6a6076;font-style:italic}
+.ai-options{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.ai-option{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fff;border:1px solid #e2d9ec;border-left:4px solid #eaaa00;border-radius:10px;padding:10px 12px}
+.ai-option-room{font-weight:600;color:#2b1b3f}
+.ai-booked{display:flex;align-items:center;gap:8px}
+.ai-more{font-size:.95em}
+.ai-insights{margin-top:10px;background:#fff;border:1px solid #e2d9ec;border-radius:10px;padding:12px}
+.ai-insights-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:8px}
+.ai-insights h4{margin:0 0 4px;font-size:.95em;color:#582c83}
+.ai-insights ol,.ai-insights ul{margin:0;padding-left:20px}
+.ai-examples .chip{white-space:normal;text-align:left}
+.ai-form{display:flex;gap:8px}
+.ai-form input{flex:1;min-width:0;padding:10px 12px;border:1px solid #cfc4dc;border-radius:8px;font:inherit}
+@media (max-width:640px){.ai-option{flex-direction:column;align-items:flex-start}.ai-msg--user{max-width:90%}}

@@ -1,4 +1,5 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import AddToCalendar from '../components/AddToCalendar';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../lib/api';
 import DayStrip, { buildSlots, openWindows, fmtTime } from '../components/DayStrip';
@@ -72,6 +73,7 @@ function BookingPanel({ room, slots, onBooked }) {
         </p>
         <div className="actions">
           <Link to="/student" className="btn btn--primary">Go to my dashboard</Link>
+          <AddToCalendar booking={booked} />
           <button type="button" className="btn btn--outline" onClick={() => setBooked(null)}>Book another time</button>
         </div>
       </div>

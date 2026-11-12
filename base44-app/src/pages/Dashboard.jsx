@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import AddToCalendar from '../components/AddToCalendar';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
 import { useAuth } from '../auth/AuthContext';
@@ -218,6 +219,7 @@ export default function Dashboard() {
                   <div className="booking-actions">
                     <button type="button" className="btn btn--quiet" onClick={() => { setMessage(''); setConfirming(null); setChanging(r.id); }}>Change time</button>
                     <button type="button" className="btn btn--quiet" onClick={() => { setMessage(''); setChanging(null); setConfirming(r.id); }}>Cancel</button>
+                    <AddToCalendar booking={r} compact />
                   </div>
                 )}
               </li>

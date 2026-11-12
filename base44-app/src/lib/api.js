@@ -122,6 +122,9 @@ export const api = {
   staffList: () => call('manage-staff', { action: 'list' }), // SRRS-13
   updateStaff: (body) => call('manage-staff', { action: 'update', ...body }), // SRRS-13
 
+  // SRRS-18 AI booking assistant
+  askAssistant: (messages) => call('assistant', { messages }),
+
   // SRRS-1 profile step
   completeProfile: (body) => call('complete-profile', body),
   studentIdAvailable: async (studentId) => (await call('check-student-id', { studentId })).available,

@@ -22,7 +22,7 @@ export default async function (req: Request): Promise<Response> {
     if (taken.some((u: any) => u.id !== user.id)) {
       throw new RuleError('STUDENT_ID_TAKEN', 'That student ID already has an account.', 409);
     }
-    await sr.entities.User.update(user.id, { full_name: fullName, student_id: studentId });
+    await sr.entities.User.update(user.id, { display_name: fullName, student_id: studentId });
     return Response.json({ ok: true, fullName, studentId });
   } catch (err) {
     return errorResponse(err);
