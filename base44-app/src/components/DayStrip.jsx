@@ -13,7 +13,7 @@ export function buildSlots(dateStr, busy, now = new Date()) {
     let state = 'open';
     for (const b of busy) {
       if (new Date(b.start) < end && new Date(b.end) > start) {
-        state = b.kind === 'blocked' ? 'blocked' : 'reserved';
+        state = b.kind === 'blocked' ? 'blocked' : b.booking?.role === 'staff' ? 'staff' : 'reserved';
         if (state === 'blocked') break;
       }
     }
@@ -36,9 +36,10 @@ export function openWindows(slots) {
 
 export const fmtTime = (d) => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 
-const LABELS = { open: 'Open', reserved: 'Reserved', blocked: 'Closed by staff', past: 'Past' };
+const LABELS = { open: 'Open', reserved: 'Reserved', staff: 'Staff booking', blocked: 'Closed by staff', past: 'Past' };
 
-export default function DayStrip({ slots }) {
+// SRRS-16: on the staff schedule, staff bookings get their own color (showStaff).
+export default function DayStrip({ slots, showStaff = false }) {
   const hours = [];
   for (let h = DAY_START_HOUR; h < DAY_END_HOUR; h += 2) hours.push(h);
 
@@ -63,7 +64,7 @@ export default function DayStrip({ slots }) {
         ))}
       </div>
       <figcaption className="legend">
-        {['open', 'reserved', 'blocked', 'past'].map((k) => (
+        {(showStaff ? ['open', 'reserved', 'staff', 'blocked', 'past'] : ['open', 'reserved', 'blocked', 'past']).map((k) => (
           <span key={k} className="legend-item">
             <span className={`swatch slot--${k}`} aria-hidden="true" />
             {LABELS[k]}

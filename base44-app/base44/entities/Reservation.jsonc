@@ -1,3 +1,5 @@
+// SRRS-6 to 10, 15, 16. Students read only their own bookings. Nobody writes directly:
+// every create, change, and cancel goes through a backend function that enforces the booking rules.
 {
   "name": "Reservation",
   "type": "object",
@@ -46,6 +48,25 @@
     "cancelled_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "booker_role": {
+      "type": "string",
+      "enum": [
+        "student",
+        "staff"
+      ],
+      "default": "student",
+      "description": "SRRS-15/16"
+    },
+    "booker_student_id": {
+      "type": "string",
+      "description": "Shown to staff only (SRRS-16)"
+    },
+    "cancelled_by_name": {
+      "type": "string"
+    },
+    "cancel_reason": {
+      "type": "string"
     }
   },
   "required": [

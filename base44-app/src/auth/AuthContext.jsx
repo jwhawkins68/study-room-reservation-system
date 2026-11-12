@@ -9,10 +9,13 @@ const AuthContext = createContext(null);
 const toProfile = (u) =>
   u && {
     id: u.id,
-    fullName: u.full_name || '',
+    fullName: u.display_name || u.full_name || '',
     studentId: u.student_id || '',
     email: u.email,
     role: u.role === 'admin' ? 'staff' : 'student',
+    // SRRS-13: staff are system admins unless marked coordinator for specific buildings
+    staffRole: u.role === 'admin' ? (u.staff_role || 'system_admin') : null,
+    buildings: u.buildings || [],
   };
 
 const friendly = (err, fallback) => err?.response?.data?.message || err?.data?.message || err?.message || fallback;
