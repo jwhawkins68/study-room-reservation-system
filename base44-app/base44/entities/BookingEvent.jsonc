@@ -1,0 +1,77 @@
+{
+  "name": "BookingEvent",
+  "type": "object",
+  "properties": {
+    "reservation_id": {
+      "type": "string"
+    },
+    "room_id": {
+      "type": "string"
+    },
+    "room_name": {
+      "type": "string"
+    },
+    "building": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "created",
+        "changed",
+        "cancelled"
+      ]
+    },
+    "actor_id": {
+      "type": "string",
+      "description": "Who did it"
+    },
+    "actor_name": {
+      "type": "string"
+    },
+    "actor_role": {
+      "type": "string",
+      "enum": [
+        "student",
+        "staff"
+      ]
+    },
+    "booker_name": {
+      "type": "string",
+      "description": "Whose booking it is"
+    },
+    "old_starts_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "old_ends_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "new_starts_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "new_ends_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "note": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "reservation_id",
+    "action"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": false,
+    "update": false,
+    "delete": false
+  }
+}
