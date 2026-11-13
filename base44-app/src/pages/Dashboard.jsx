@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import Updates from '../components/Updates';
 import AddToCalendar from '../components/AddToCalendar';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
@@ -159,6 +160,8 @@ export default function Dashboard() {
           <dd className="stat-text">{isStaff ? 'Staff' : user?.studentId || '–'}</dd>
         </div>
       </dl>
+
+      {!isStaff && <Updates onChange={load} />}
 
       <section aria-labelledby="bookings-heading" className="panel">
         <div className="panel-head">

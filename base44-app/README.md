@@ -1,7 +1,7 @@
 # SRRS on Base44 (Sprints 1–3)
 
 A second version of the Study Room Reservation System that runs on [Base44](https://base44.com) instead of Supabase + Express.
-It covers Jira stories **SRRS-1 to SRRS-18** (Sprints 1–3) and reuses the React pages from `web/`, so it looks and behaves the same.
+It covers Jira stories **SRRS-1 to SRRS-23** (Sprints 1–4) and reuses the React pages from `web/`, so it looks and behaves the same.
 
 - **Live app:** https://study-room-reservation-system-5f98d0e0.base44.app
 - **Base44 editor:** https://app.base44.com/apps/6adc01e69e59ba9d5f98d0e0/editor/preview (owner access)
@@ -45,6 +45,12 @@ were rewritten to talk to Base44, with the same function names and data shapes.
 | SRRS-16 Who booked each slot | "Who booked this day" table with Student/Staff badge and details in `pages/RoomDetail.jsx`; `room-schedule` returns these fields to staff only |
 | SRRS-17 Add to Outlook | `components/AddToCalendar.jsx`, `lib/calendar.js`: Outlook on the web link or a `.ics` file, on My bookings and the booking confirmation |
 | SRRS-18 AI booking assistant | `pages/Assistant.jsx`, function `assistant`. The LLM (Base44 `InvokeLLM`) only reads the request; the function checks real availability, and **Book it** goes through `book-room`. Staff can ask for usage insights |
+| SRRS-19 Notices when staff cancel or close | `shared/aftercare.ts` (email + `Notification`), called from `cancel-booking` and `manage-block`; `components/Updates.jsx` |
+| SRRS-20 AI rebook offers | `findAlternative()` in `shared/aftercare.ts` picks the closest open room from live data (`RebookOffer`); **Move me** books it through the normal rules in `my-updates` |
+| SRRS-21 Assistant on every page | `components/AssistantLauncher.jsx` (knows which page you are on); chat shared with `pages/Assistant.jsx` |
+| SRRS-22 Daily brief and analytics | function `analytics`; `components/DailyBrief.jsx` (AI words the numbers), `pages/Analytics.jsx` (charts + tables) |
+| SRRS-23 Larger text and high contrast | toggles in the top bar (`Layout.jsx`), saved to the account by `save-preferences` |
+| SRRS-27 How to use | `pages/Help.jsx` (welcome video with captions + written steps) |
 
 Sign-up note: Base44 keeps `full_name` read-only for the app, so the name typed at sign-up is saved as `display_name` (SRRS-1).
 
@@ -64,6 +70,8 @@ Run the rule and staff-scope tests (20 cases, no Base44 account needed):
 cd base44-app
 npx esbuild base44/shared/booking.ts --format=esm --outfile=/tmp/booking.mjs
 node scripts/test-booking-rules.mjs
+npx esbuild base44/shared/aftercare.ts --bundle --format=esm --outfile=/tmp/aftercare.mjs
+node scripts/test-aftercare.mjs   # 8 rebook-offer cases
 ```
 
 ## Accounts

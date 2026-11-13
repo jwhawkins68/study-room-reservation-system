@@ -12,6 +12,14 @@
       "type": "string",
       "description": "Name the student typed at sign-up (Base44 keeps full_name read-only). SRRS-1"
     },
+    "large_text": {
+      "type": "boolean",
+      "description": "SRRS-23: show the app in larger text"
+    },
+    "high_contrast": {
+      "type": "boolean",
+      "description": "SRRS-23: high-contrast colors"
+    },
     "student_id": {
       "type": "string",
       "description": "PVAMU student ID, e.g. P00123456 (unique; empty for staff). SRRS-1"

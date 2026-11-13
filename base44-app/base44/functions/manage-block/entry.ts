@@ -3,6 +3,7 @@
 // SRRS-13: coordinators only in their buildings.
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 import { RuleError, errorResponse, requireUser, requireStaff, requireRoomScope, loadRoom, conflicts, logEvent, nameOf } from '../../shared/booking.ts';
+import { aftercare } from '../../shared/aftercare.ts';
 
 export default async function (req: Request): Promise<Response> {
   const base44 = createClientFromRequest(req);
@@ -40,18 +41,23 @@ export default async function (req: Request): Promise<Response> {
       }, { status: 409 });
     }
 
+    // Create the closure first, so rebook offers can never point back into the closed period.
+    const block = await sr.entities.RoomBlock.create({
+      room_id: room.id, starts_at: new Date(s).toISOString(), ends_at: new Date(e).toISOString(),
+      reason, created_by_name: nameOf(user),
+    });
+    let offered = 0;
     for (const r of affected) {
       await sr.entities.Reservation.update(r.id, {
         status: 'cancelled', cancelled_at: new Date().toISOString(),
         cancelled_by_name: nameOf(user), cancel_reason: `Room closed: ${reason}`,
       });
       await logEvent(sr, { reservation: r, room, actor: user, action: 'cancelled', before: { starts_at: r.starts_at, ends_at: r.ends_at }, note: `Room closed: ${reason}` });
+      // SRRS-19/20: notice + email + closest open room
+      const care = await aftercare(sr, { reservation: r, room, staff: user, kind: 'room_closed', reason });
+      if (care.offered) offered += 1;
     }
-    const block = await sr.entities.RoomBlock.create({
-      room_id: room.id, starts_at: new Date(s).toISOString(), ends_at: new Date(e).toISOString(),
-      reason, created_by_name: nameOf(user),
-    });
-    return Response.json({ block, cancelled: affected.length }, { status: 201 });
+    return Response.json({ block, cancelled: affected.length, offered }, { status: 201 });
   } catch (err) {
     return errorResponse(err);
   }

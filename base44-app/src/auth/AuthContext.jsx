@@ -16,6 +16,9 @@ const toProfile = (u) =>
     // SRRS-13: staff are system admins unless marked coordinator for specific buildings
     staffRole: u.role === 'admin' ? (u.staff_role || 'system_admin') : null,
     buildings: u.buildings || [],
+    // SRRS-23 display settings, saved on the account
+    largeText: !!u.large_text,
+    highContrast: !!u.high_contrast,
   };
 
 const friendly = (err, fallback) => err?.response?.data?.message || err?.data?.message || err?.message || fallback;
@@ -87,13 +90,31 @@ export function AuthProvider({ children }) {
     return loadProfile();
   }, [loadProfile]);
 
+  // SRRS-23: larger text / high contrast. Applied at once, remembered on this device, and saved to the account.
+  const [prefs, setPrefsState] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('srrs-display') || '{}'); } catch { return {}; }
+  });
+  useEffect(() => {
+    if (user) setPrefsState((p) => ({ largeText: user.largeText || !!p.largeText, highContrast: user.highContrast || !!p.highContrast }));
+  }, [user]);
+  useEffect(() => {
+    const el = document.documentElement;
+    el.classList.toggle('large-text', !!prefs.largeText);
+    el.classList.toggle('high-contrast', !!prefs.highContrast);
+    try { localStorage.setItem('srrs-display', JSON.stringify(prefs)); } catch { /* private mode */ }
+  }, [prefs]);
+  const setPrefs = useCallback((patch) => {
+    setPrefsState((p) => ({ ...p, ...patch }));
+    if (user) api.savePreferences(patch).catch(() => {});
+  }, [user]);
+
   const logout = useCallback(() => {
     setUser(null);
     base44.auth.logout(window.location.origin + '/');
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, startSignup, finishSignup, resendCode, completeProfile, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, startSignup, finishSignup, resendCode, completeProfile, logout, prefs, setPrefs }}>
       {children}
     </AuthContext.Provider>
   );
