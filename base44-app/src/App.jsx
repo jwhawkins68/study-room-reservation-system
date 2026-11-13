@@ -33,7 +33,7 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/help" element={<Help />} />
+      <Route path="/help" element={<Layout><Help /></Layout>} />
       <Route path="/complete-profile" element={<CompleteProfile />} />
 
       {/* Student portal (Sprints 1-2) */}
