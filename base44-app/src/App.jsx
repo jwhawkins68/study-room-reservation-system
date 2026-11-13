@@ -13,6 +13,8 @@ import AdminCenter from './pages/AdminCenter';
 import ManageRooms from './pages/ManageRooms';
 import AuditLog from './pages/AuditLog';
 import Assistant from './pages/Assistant';
+import Analytics from './pages/Analytics';
+import Help from './pages/Help';
 import ManageStaff from './pages/ManageStaff';
 
 function Fallback() {
@@ -31,6 +33,7 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/help" element={<Help />} />
       <Route path="/complete-profile" element={<CompleteProfile />} />
 
       {/* Student portal (Sprints 1-2) */}
@@ -47,6 +50,7 @@ export default function App() {
       <Route path="/staff/book/:id" element={staff(<RoomDetail backPath="/staff/book" canBook />)} />
       <Route path="/staff/bookings" element={staff(<Dashboard />)} />
       <Route path="/staff/audit" element={staff(<AuditLog />)} />
+      <Route path="/staff/analytics" element={staff(<Analytics />)} />
       <Route path="/staff/assistant" element={staff(<Assistant />)} />
       <Route path="/staff/team" element={staff(<ManageStaff />)} />
 
