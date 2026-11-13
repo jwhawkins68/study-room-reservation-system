@@ -70,7 +70,8 @@ export default async function (req: Request): Promise<Response> {
       today, bookingsToday: todays.length, roomsInUseNow: inUse.size, closuresToday: closuresToday.length,
       rejectedYesterday, busiestRoomsToday: busiestToday, peakStartTime: peak?.bookings ? peak.label : null,
       mostUsedRoom: usage[0]?.bookings ? `${usage[0].name} (${usage[0].building})` : null,
-      leastUsedRooms: usage.filter((u: any) => u.bookings === 0).slice(0, 3).map((u: any) => u.name),
+      // only open rooms: a room staff have closed isn't "underused"
+      leastUsedRooms: usage.filter((u: any) => u.bookings === 0 && byId.get(u.id)?.is_active !== false).slice(0, 3).map((u: any) => u.name),
       scope: scope.all ? 'all buildings' : scope.buildings.join(', '),
     };
 
@@ -84,7 +85,7 @@ export default async function (req: Request): Promise<Response> {
       } catch (err) {
         console.warn('Brief not generated:', err);
       }
-      // never show a brief that names a room the facts don't (it once invented a "Media Room")
+      // never show a brief that names a room the facts don't list (a safety net: the model can invent names)
       const checked = checkedBrief(briefText, facts);
       briefText = checked.text;
       briefSource = checked.source;

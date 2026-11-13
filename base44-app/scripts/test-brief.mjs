@@ -13,14 +13,14 @@ const t = (name, ok) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}`); if (!
 
 t('rooms in the facts are allowed', onlyKnownRooms('Review Room 250 was busiest; Study Room 105 and Collab Room B sat empty.', allowed));
 t('a shortened name is allowed', onlyKnownRooms('Room 105 was quiet.', allowed));
-t('an invented room is caught (the real Nov 13 brief)', !onlyKnownRooms(
-  'Please focus on promoting the underutilized areas, such as Study Room 105, the Media Room, and Study Room 1B.', allowed));
+t('a room name that is not in the facts is caught', !onlyKnownRooms(
+  'Please focus on promoting the underused areas, such as Study Room 105, the Seminar Room, and Study Room 9Z.', allowed));
 t('a real room that is not in the facts is caught', !onlyKnownRooms('Study Room 230 is popular.', allowed));
 t('no room names at all is fine', onlyKnownRooms('No bookings yet today. Peak is 2 PM.', allowed));
 t('"Rooms in use" is not read as a room name', onlyKnownRooms('Rooms in use: 0.', allowed));
 
-const bad = checkedBrief('Promote the Media Room this week.', facts);
-t('bad AI text falls back to the facts', bad.source === 'facts' && bad.text.includes('No bookings yet today') && !bad.text.includes('Media'));
+const bad = checkedBrief('Promote the Seminar Room this week.', facts);
+t('text naming an unlisted room falls back to the facts', bad.source === 'facts' && bad.text.includes('No bookings yet today') && !bad.text.includes('Seminar'));
 const good = checkedBrief('Quiet morning; Review Room 250 has been the most used.', facts);
 t('good AI text is kept', good.source === 'ai');
 
