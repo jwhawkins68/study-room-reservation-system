@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth, homeFor } from '../auth/AuthContext';
 import { HELP_VIDEO_URL, HELP_CAPTIONS_URL, HELP_POSTER_URL } from '../lib/media';
+import { HELP_TRANSCRIPT } from '../lib/transcript';
 
 const STUDENT_STEPS = [
   ['Create your account', 'Choose Create account, enter your name, student ID, email and a password, then type the 6-digit code we email you.'],
@@ -38,6 +39,10 @@ export default function Help() {
           <p className="muted">The video is being produced. The steps below cover the same things.</p>
         )}
         <p className="muted small">Captions are on by default. The narration is a computer voice.</p>
+        <details className="transcript">
+          <summary>Read the narration</summary>
+          {HELP_TRANSCRIPT.map((t, i) => <p key={i}>{t}</p>)}
+        </details>
       </section>
 
       <section className="panel" aria-labelledby="student-steps">

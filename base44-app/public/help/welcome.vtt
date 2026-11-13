@@ -1,0 +1,191 @@
+WEBVTT
+
+00:00:00.600 --> 00:00:05.160
+Welcome to the Study Room Reservation
+System for Prairie View A&M.
+
+00:00:05.160 --> 00:00:09.222
+In the next few minutes, we'll show
+you how to find and book a study room,
+
+00:00:09.222 --> 00:00:12.625
+how to manage your bookings, and
+how staff keep rooms running.
+
+00:00:12.680 --> 00:00:15.420
+Then we'll show how our team built it.
+
+00:00:16.320 --> 00:00:19.340
+To get started, choose Create account.
+
+00:00:19.340 --> 00:00:24.410
+Enter your name, your student ID,
+and your email, and pick a password.
+
+00:00:24.410 --> 00:00:27.990
+We email you a six-digit code to confirm it's you.
+
+00:00:27.990 --> 00:00:32.250
+After that, you just log in
+with your email and password.
+
+00:00:33.150 --> 00:00:34.700
+Choose Find a room.
+
+00:00:34.700 --> 00:00:40.460
+Filter by group size, by features like a
+whiteboard or a screen, and by the time you need.
+
+00:00:40.460 --> 00:00:44.490
+You'll only see rooms that are
+open and big enough for your group.
+
+00:00:45.390 --> 00:00:48.600
+Open a room to see its whole day at a glance.
+
+00:00:48.600 --> 00:00:50.690
+Open half-hours are green.
+
+00:00:50.690 --> 00:00:56.190
+Booked and closed times are marked, so you
+never pick a time that's already taken.
+
+00:00:57.090 --> 00:01:00.810
+Pick a start time and how long
+you need, up to three hours.
+
+00:01:00.810 --> 00:01:03.580
+Add your group size, and choose Reserve.
+
+00:01:03.580 --> 00:01:09.500
+Your booking is confirmed right away, and you can
+add it to Outlook or any calendar with one click.
+
+00:01:10.400 --> 00:01:13.010
+Your bookings live on your dashboard.
+
+00:01:13.010 --> 00:01:15.520
+You can change the time or cancel.
+
+00:01:15.520 --> 00:01:19.870
+When you cancel, the room opens
+up for other students right away.
+
+00:01:20.770 --> 00:01:24.580
+If staff ever need your room,
+you're not left stranded.
+
+00:01:24.580 --> 00:01:30.300
+You get an email and a notice here, with another
+room or time the system has already found for you.
+
+00:01:30.300 --> 00:01:32.960
+Choose Move me, and you're rebooked.
+
+00:01:33.860 --> 00:01:35.100
+Need help?
+
+00:01:35.100 --> 00:01:37.850
+The assistant button is on every page.
+
+00:01:37.850 --> 00:01:43.420
+Ask in plain words, like: find me a
+room for four people tomorrow at two.
+
+00:01:43.420 --> 00:01:46.410
+It answers using live availability.
+
+00:01:47.310 --> 00:01:52.180
+At the top of every page, you can
+turn on larger text or high contrast.
+
+00:01:52.180 --> 00:01:54.780
+Your choice is saved to your account.
+
+00:01:55.680 --> 00:01:58.080
+Staff sign in to the admin center.
+
+00:01:58.080 --> 00:02:05.110
+A short daily brief sums up the day: how busy rooms
+are, what was turned away, and what needs attention.
+
+00:02:05.110 --> 00:02:11.510
+Below it, staff see every booking, each room's
+status, and booking attempts the system refused.
+
+00:02:12.410 --> 00:02:17.190
+To close a room for an event or
+repairs, staff block the time.
+
+00:02:17.190 --> 00:02:22.450
+Anyone booked in that window is notified
+and offered another room automatically.
+
+00:02:23.350 --> 00:02:27.290
+Analytics shows usage by day, by hour, and by room.
+
+00:02:27.290 --> 00:02:32.050
+Every chart has a table view, so
+it works with screen readers too.
+
+00:02:32.950 --> 00:02:34.780
+Here's how we got here.
+
+00:02:34.780 --> 00:02:39.629
+In Sprint 1, our team built a
+React front end on sample data,
+
+00:02:39.629 --> 00:02:44.161
+a Supabase Postgres database,
+and a Node and Express API.
+
+00:02:45.140 --> 00:02:50.850
+The most important rule, no double bookings,
+is enforced by the database itself.
+
+00:02:50.850 --> 00:02:54.690
+Alex books Study Room 106 from 2 to 4 PM.
+
+00:02:54.690 --> 00:02:58.740
+When Jordan tries 3 to 5 PM, Postgres refuses it.
+
+00:02:58.740 --> 00:03:02.890
+4 to 5 PM is fine, because
+back-to-back bookings don't overlap.
+
+00:03:02.890 --> 00:03:07.250
+The three-hour limit and room
+capacity are checked the same way.
+
+00:03:08.150 --> 00:03:12.760
+The Express API turns those
+database errors into clear answers.
+
+00:03:12.760 --> 00:03:18.890
+A conflict becomes a 409 error with the code
+ROOM_TAKEN, which the app shows in plain words.
+
+00:03:19.790 --> 00:03:24.785
+In Sprint 2, we moved to Base44 to put
+a live, public app in front of users,
+
+00:03:24.785 --> 00:03:30.174
+carrying the same rules over and testing
+them automatically on every pull request.
+
+00:03:30.240 --> 00:03:34.630
+Over the following sprints we
+added staff tools, calendar export,
+
+00:03:34.630 --> 00:03:39.762
+the AI assistant, and the rebooking and
+accessibility features you just saw.
+
+00:03:40.730 --> 00:03:43.770
+That's the Study Room Reservation System.
+
+00:03:43.770 --> 00:03:46.130
+Try it at the address on screen.
+
+00:03:46.130 --> 00:03:48.140
+Thanks for watching.

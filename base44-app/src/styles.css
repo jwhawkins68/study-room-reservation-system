@@ -446,3 +446,8 @@ html.high-contrast :focus-visible { outline: 4px solid #000; outline-offset: 3px
 .steps h3 { margin: 0.2rem 0; color: var(--purple); }
 .steps p { margin: 0; }
 .footer-link { color: inherit; }
+
+/* SRRS-27: transcript under the welcome video */
+.transcript { margin-top: 1rem; }
+.transcript summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; }
+.transcript p { max-width: 70ch; line-height: 1.6; }
