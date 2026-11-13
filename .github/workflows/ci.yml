@@ -34,6 +34,10 @@ jobs:
         run: |
           npx esbuild base44/shared/aftercare.ts --bundle --format=esm --outfile=/tmp/aftercare.mjs --log-level=warning
           node scripts/test-aftercare.mjs
+      - name: Daily brief names only real rooms (SRRS-22)
+        run: |
+          npx esbuild base44/shared/brief.ts --bundle --format=esm --outfile=/tmp/brief.mjs --log-level=warning
+          node scripts/test-brief.mjs
 
   web:
     name: Web front end (build)

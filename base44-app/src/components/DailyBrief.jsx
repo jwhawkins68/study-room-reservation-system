@@ -33,7 +33,7 @@ export default function DailyBrief() {
             <div><dt>Closures today</dt><dd>{b.closuresToday}</dd></div>
             <div><dt>Refused yesterday</dt><dd>{b.rejectedYesterday}</dd></div>
           </dl>
-          <p className="muted small">Written by the AI assistant from the numbers above · {b.scope}</p>
+          <p className="muted small">{b.source === 'ai' ? 'Written by the AI assistant from the numbers above' : 'Summary of the numbers above'} · {b.scope}</p>
         </>
       )}
     </section>

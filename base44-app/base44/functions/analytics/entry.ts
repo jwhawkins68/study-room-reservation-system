@@ -2,6 +2,7 @@
 // the AI only turns today's numbers into a short plain-English summary. Coordinators see only their buildings.
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 import { errorResponse, requireUser, requireStaff, inScope, overlaps } from '../../shared/booking.ts';
+import { checkedBrief } from '../../shared/brief.ts';
 
 const TZ = 'America/Chicago';
 const OPEN_HOURS = 14; // rooms bookable 8 AM – 10 PM
@@ -74,14 +75,19 @@ export default async function (req: Request): Promise<Response> {
     };
 
     let briefText = '';
+    let briefSource = 'facts';
     if (body.brief !== false) {
       try {
         briefText = String(await sr.integrations.Core.InvokeLLM({
-          prompt: `Write a short morning brief (2 or 3 sentences, plain English, no bullet points, no greeting) for the staff who manage campus study rooms at Prairie View A&M University (${facts.scope}). Use ONLY these facts and do not invent numbers; skip any fact that is empty or zero unless it is good news. End with one practical suggestion if the facts support one.\n${JSON.stringify(facts)}`,
+          prompt: `Write a short morning brief (2 or 3 sentences, plain English, no bullet points, no greeting) for the staff who manage campus study rooms at Prairie View A&M University (${facts.scope}). Use ONLY these facts: do not invent numbers, and name a room only if its exact name appears in the facts. Skip any fact that is empty or zero unless it is good news. End with one practical suggestion if the facts support one.\n${JSON.stringify(facts)}`,
         })).trim().slice(0, 600);
       } catch (err) {
         console.warn('Brief not generated:', err);
       }
+      // never show a brief that names a room the facts don't (it once invented a "Media Room")
+      const checked = checkedBrief(briefText, facts);
+      briefText = checked.text;
+      briefSource = checked.source;
     }
 
     return Response.json({
@@ -93,7 +99,7 @@ export default async function (req: Request): Promise<Response> {
       },
       perDay, byHour, usage, byBuilding,
       rejected: [...reasons.entries()].sort((a, b) => b[1] - a[1]).map(([reason, count]) => ({ reason, count })),
-      brief: { ...facts, text: briefText },
+      brief: { ...facts, text: briefText, source: briefSource },
     });
   } catch (err) {
     return errorResponse(err);
