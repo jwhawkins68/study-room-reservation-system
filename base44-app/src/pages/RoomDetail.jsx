@@ -211,7 +211,7 @@ const HALF_HOURS = Array.from({ length: 29 }, (_, i) => {
   const mins = 8 * 60 + i * 30;
   const h = Math.floor(mins / 60);
   const m = mins % 60;
-  return { value: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`, label: `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'a.m.' : 'p.m.'}` };
+  return { value: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`, label: `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}` };
 });
 
 function BlockPanel({ room, date, busy, onChange }) {
