@@ -9,7 +9,7 @@ const TIMES = Array.from({ length: 28 }, (_, i) => {
   const mins = 8 * 60 + i * 30;
   const h = Math.floor(mins / 60);
   const m = mins % 60;
-  const label = `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'a.m.' : 'p.m.'}`;
+  const label = `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`;
   return { value: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`, label };
 });
 const LENGTHS = [[1, '30 min'], [2, '1 hr'], [3, '1 hr 30 min'], [4, '2 hr'], [5, '2 hr 30 min'], [6, '3 hr']];
