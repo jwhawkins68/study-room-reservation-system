@@ -1,0 +1,24 @@
+{
+  "name": "RebookOffer",
+  "type": "object",
+  "properties": {
+    "user_id": { "type": "string" },
+    "reservation_id": { "type": "string", "description": "The cancelled booking this replaces" },
+    "room_id": { "type": "string", "description": "The room offered" },
+    "room_name": { "type": "string" },
+    "building": { "type": "string" },
+    "starts_at": { "type": "string", "format": "date-time" },
+    "ends_at": { "type": "string", "format": "date-time" },
+    "party_size": { "type": "integer" },
+    "reason": { "type": "string", "description": "Why this room was picked, shown to the student" },
+    "status": { "type": "string", "enum": ["pending", "accepted", "dismissed", "expired"], "default": "pending" },
+    "new_reservation_id": { "type": "string" }
+  },
+  "required": ["user_id", "reservation_id", "room_id", "starts_at", "ends_at"],
+  "rls": {
+    "read": { "data.user_id": "{{user.id}}" },
+    "create": false,
+    "update": false,
+    "delete": false
+  }
+}

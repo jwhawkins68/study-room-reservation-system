@@ -2,6 +2,7 @@
 // SRRS-11: staff cancel any booking in the buildings they manage (SRRS-13), with an optional reason.
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 import { RuleError, errorResponse, requireUser, staffScope, inScope, logEvent, toReservation, nameOf } from '../../shared/booking.ts';
+import { aftercare } from '../../shared/aftercare.ts';
 
 export default async function (req: Request): Promise<Response> {
   const base44 = createClientFromRequest(req);
@@ -32,7 +33,9 @@ export default async function (req: Request): Promise<Response> {
       before: { starts_at: r.starts_at, ends_at: r.ends_at },
       note: asStaff ? `Cancelled by staff${reason ? `: ${reason}` : ''}` : reason || undefined,
     });
-    return Response.json(toReservation({ ...r, ...updated }, room));
+    // SRRS-19/20: tell the student and offer the closest open room.
+    const care = asStaff ? await aftercare(sr, { reservation: r, room, staff: user, kind: 'cancelled_by_staff', reason }) : null;
+    return Response.json({ ...toReservation({ ...r, ...updated }, room), notified: !!care?.notified, offered: !!care?.offered });
   } catch (err) {
     return errorResponse(err);
   }

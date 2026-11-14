@@ -1,0 +1,72 @@
+# SRRS-25: every pull request and every push to main must build and pass its tests.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  base44-app:
+    name: Base44 app (lint, build, booking-rule tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: base44-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-audit --no-fund
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Booking-rule tests (overlaps, 3-hour limit, capacity, closures, coordinator scope)
+        run: |
+          npx esbuild base44/shared/booking.ts --format=esm --outfile=/tmp/booking.mjs --log-level=warning
+          node scripts/test-booking-rules.mjs
+      - name: Rebook-offer tests (SRRS-20)
+        run: |
+          npx esbuild base44/shared/aftercare.ts --bundle --format=esm --outfile=/tmp/aftercare.mjs --log-level=warning
+          node scripts/test-aftercare.mjs
+      - name: Daily brief names only real rooms (SRRS-22)
+        run: |
+          npx esbuild base44/shared/brief.ts --bundle --format=esm --outfile=/tmp/brief.mjs --log-level=warning
+          node scripts/test-brief.mjs
+
+  web:
+    name: Web front end (build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npx vite build
+
+  api:
+    name: Express API (unit tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+      - run: npm ci
+      - run: npm test

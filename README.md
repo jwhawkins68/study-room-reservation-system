@@ -15,6 +15,10 @@ Students find and reserve study rooms; staff manage rooms and closures.
 
 VSCODE: React · Node.js/Express · Supabase (Postgres + Auth) w/Postman for API routing validation. 
 
+## Checks
+
+Every pull request runs `.github/workflows/ci.yml`: the Base44 app's lint, build and 20 booking-rule tests, the `web/` build, and the `api/` unit tests. Merge only when all three are green.
+
 ## Working rules
 
 - Branch names start with the Jira key: `SRRS-4-rooms-list`

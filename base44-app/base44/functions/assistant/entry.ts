@@ -66,6 +66,8 @@ export default async function (req: Request): Promise<Response> {
       throw new RuleError('VALIDATION', 'Type a question for the assistant.', 400);
     }
 
+    // SRRS-21: the floating assistant passes where the user is (e.g. "Viewing Study Room 201, Library").
+    const context = String(body.context ?? '').replace(/[\r\n]+/g, ' ').slice(0, 120);
     const rooms = (await sr.entities.Room.list(undefined, 5000)).filter((r: any) => r.is_active !== false);
     const buildings = [...new Set(rooms.map((r: any) => r.building))].sort();
     const today = todayCentral();
@@ -76,7 +78,7 @@ export default async function (req: Request): Promise<Response> {
 You help ${staff ? 'a staff member' : 'a student'} find and book campus study rooms. Today is ${weekday(Date.now())}, ${today} (US Central time).
 Rooms are booked in 30-minute steps, at most 3 hours, between 8:00 AM and 10:00 PM.
 
-Read the conversation and work out what the user wants now, carrying details forward from earlier turns.
+${context ? `The user is currently on this page: ${context}. If they say "this room" or "here", they mean that room.\n` : ''}Read the conversation and work out what the user wants now, carrying details forward from earlier turns.
 - find_rooms: they want a room. Fill date, start_time (24-hour), duration_minutes (default 60 if not said), party_size, amenities (only from: ${AMENITIES.join(', ')}; "TV", "screen", "monitor" or "HDMI" means "TV / HDMI"; "wheelchair" means "Accessible"), building (exact name from: ${buildings.join(', ')}), room_name if they named a room, purpose if they said why.
 - my_bookings: they ask what they have booked.
 - insights: ${staff ? 'they ask about usage, busiest rooms or times, or rejected bookings.' : 'only staff can use this; treat as other.'}

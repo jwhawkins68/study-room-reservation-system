@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
 import { useAuth } from '../auth/AuthContext';
+import DailyBrief from '../components/DailyBrief';
 import { ymd, addDays, midnight, fmtDay, fmtTime, fmtStamp, localInput, REASONS } from '../lib/dates';
 
 const STATE = {
@@ -69,6 +70,8 @@ export default function AdminCenter() {
       <p className="muted">
         {user.staffRole === 'coordinator' ? `Your buildings: ${user.buildings.join(', ')}.` : 'All buildings.'} Bookings, room status, and rejected attempts.
       </p>
+
+      <DailyBrief />
 
       <dl className="stats stats--4">
         <div className="stat"><dt>Confirmed bookings</dt><dd>{data ? data.counts.confirmed : '–'}</dd></div>

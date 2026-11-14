@@ -123,7 +123,15 @@ export const api = {
   updateStaff: (body) => call('manage-staff', { action: 'update', ...body }), // SRRS-13
 
   // SRRS-18 AI booking assistant
-  askAssistant: (messages) => call('assistant', { messages }),
+  askAssistant: (messages, context) => call('assistant', { messages, context }),
+
+  // Sprint 4
+  myUpdates: () => call('my-updates', { action: 'list' }), // SRRS-19/20
+  markRead: (ids) => call('my-updates', { action: 'read', ids }),
+  acceptOffer: (offerId) => call('my-updates', { action: 'accept', offerId }),
+  dismissOffer: (offerId) => call('my-updates', { action: 'dismiss', offerId }),
+  analytics: (body) => call('analytics', body), // SRRS-22
+  savePreferences: (body) => call('save-preferences', body), // SRRS-23
 
   // SRRS-1 profile step
   completeProfile: (body) => call('complete-profile', body),
