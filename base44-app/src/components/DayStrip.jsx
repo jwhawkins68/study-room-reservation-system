@@ -59,7 +59,7 @@ export default function DayStrip({ slots, showStaff = false }) {
       <div className="daystrip-hours" aria-hidden="true">
         {hours.map((h) => (
           <span key={h} style={{ left: `${((h - DAY_START_HOUR) / (DAY_END_HOUR - DAY_START_HOUR)) * 100}%` }}>
-            {h === 12 ? '12 p.m.' : h > 12 ? `${h - 12} p.m.` : `${h} a.m.`}
+            {h === 12 ? '12 PM' : h > 12 ? `${h - 12} PM` : `${h} AM`}
           </span>
         ))}
       </div>
