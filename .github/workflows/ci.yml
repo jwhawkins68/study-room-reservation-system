@@ -38,6 +38,8 @@ jobs:
         run: |
           npx esbuild base44/shared/brief.ts --bundle --format=esm --outfile=/tmp/brief.mjs --log-level=warning
           node scripts/test-brief.mjs
+      - name: Add to Outlook link and .ics file (SRRS-17, SRRS-31)
+        run: node scripts/test-calendar.mjs
 
   web:
     name: Web front end (build)

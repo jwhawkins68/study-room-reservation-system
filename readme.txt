@@ -24,7 +24,7 @@ DELIVERABLES
 ------------
   SRRS_Final_Technical_Report.pdf   Final technical report (also .docx)
   SRRS_Source_Code.zip              This repository (branch main)
-  SRRS_Welcome_Walkthrough.mp4      3:48 narrated, captioned walkthrough of the running app
+  SRRS_Welcome_Walkthrough.mp4      4:15 narrated, captioned walkthrough of the running app
   readme.txt                        This file
 
 WHAT IS IN THE REPOSITORY
@@ -37,7 +37,7 @@ WHAT IS IN THE REPOSITORY
                               assistant, analytics, my-updates, ...)
      base44/shared/           booking.ts (all booking rules), aftercare.ts (notices and
                               rebook offers), brief.ts (checks the AI daily brief)
-     scripts/                 Unit tests for the rules, rebook offers and daily brief
+     scripts/                 Unit tests for the rules, rebook offers, daily brief and calendar
   web/          Sprint 1 React front end (Vite). Runs on sample data or against Supabase.
   api/          Sprint 1 Node.js + Express API (9 endpoints) and a Postman collection.
   db/           Sprint 1 Supabase PostgreSQL schema, seed data, and
@@ -84,12 +84,15 @@ Requirements: Node.js 20 or newer and npm.
      node scripts/test-aftercare.mjs              (8 tests)
      npx esbuild base44/shared/brief.ts --bundle --format=esm --outfile=/tmp/brief.mjs
      node scripts/test-brief.mjs                  (8 tests)
+     node scripts/test-calendar.mjs               (11 tests: Add to Outlook link and .ics)
    GitHub Actions runs all of these on every pull request.
 
 TESTING
 -------
 Final regression test (Nov 14, 2026): all 23 user stories (SRRS-1 to SRRS-23) pass on the
 live application. See Section 10 and Appendix B of the technical report.
+Add to Outlook was also checked in a real PVAMU Microsoft 365 calendar on Nov 14 (SRRS-31):
+the event opens filled in and saves correctly; see Section 8.2 of the report.
 
 NOTE
 ----

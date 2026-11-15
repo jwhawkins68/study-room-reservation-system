@@ -7,6 +7,10 @@ const notes = (b) =>
   [b.purpose && `Purpose: ${b.purpose}`, b.partySize && `Group of ${b.partySize}`, `Manage this booking: ${APP_URL}/student`]
     .filter(Boolean)
     .join('\n');
+// Outlook on the web reads the body as HTML: escape the user's text, and use <br> for new lines
+// (a plain \n or \r\n is collapsed onto one line; checked in a PVAMU Microsoft 365 calendar on Nov 14, 2026).
+const escHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+export const outlookBody = (b) => notes(b).split('\n').map(escHtml).join('<br>');
 
 // Outlook on the web (Microsoft 365, which PVAMU uses): opens a prefilled new event.
 export function outlookUrl(b) {
@@ -17,7 +21,7 @@ export function outlookUrl(b) {
     startdt: new Date(b.start).toISOString(),
     enddt: new Date(b.end).toISOString(),
     location: where(b),
-    body: notes(b),
+    body: outlookBody(b),
   });
   return `https://outlook.office.com/calendar/0/deeplink/compose?${p.toString()}`;
 }

@@ -61,131 +61,154 @@ Add your group size, and choose Reserve.
 Your booking is confirmed right away, and you can
 add it to Outlook or any calendar with one click.
 
-00:01:10.400 --> 00:01:13.010
+00:01:10.400 --> 00:01:12.270
+Want it on your calendar?
+
+00:01:12.270 --> 00:01:15.650
+Press Add to Outlook, and choose Outlook on the web.
+
+00:01:15.650 --> 00:01:19.314
+Your PVAMU Microsoft 365 calendar opens a new event,
+
+00:01:19.314 --> 00:01:24.600
+already filled in with the room, the
+time, and a link back to your booking.
+
+00:01:24.670 --> 00:01:28.800
+Press Save, and it sits on your
+calendar with the rest of your week.
+
+00:01:28.800 --> 00:01:32.600
+Using Outlook on your desktop, Apple, or Google?
+
+00:01:32.600 --> 00:01:35.710
+Choose Download .ics instead.
+
+00:01:36.610 --> 00:01:39.220
 Your bookings live on your dashboard.
 
-00:01:13.010 --> 00:01:15.520
+00:01:39.220 --> 00:01:41.730
 You can change the time or cancel.
 
-00:01:15.520 --> 00:01:19.870
+00:01:41.730 --> 00:01:46.080
 When you cancel, the room opens
 up for other students right away.
 
-00:01:20.770 --> 00:01:24.580
+00:01:46.980 --> 00:01:50.790
 If staff ever need your room,
 you're not left stranded.
 
-00:01:24.580 --> 00:01:30.300
+00:01:50.790 --> 00:01:56.510
 You get an email and a notice here, with another
 room or time the system has already found for you.
 
-00:01:30.300 --> 00:01:32.960
+00:01:56.510 --> 00:01:59.170
 Choose Move me, and you're rebooked.
 
-00:01:33.860 --> 00:01:35.100
+00:02:00.070 --> 00:02:01.310
 Need help?
 
-00:01:35.100 --> 00:01:37.850
+00:02:01.310 --> 00:02:04.060
 The assistant button is on every page.
 
-00:01:37.850 --> 00:01:43.420
+00:02:04.060 --> 00:02:09.630
 Ask in plain words, like: find me a
 room for four people tomorrow at two.
 
-00:01:43.420 --> 00:01:46.410
+00:02:09.630 --> 00:02:12.620
 It answers using live availability.
 
-00:01:47.310 --> 00:01:52.180
+00:02:13.520 --> 00:02:18.390
 At the top of every page, you can
 turn on larger text or high contrast.
 
-00:01:52.180 --> 00:01:54.780
+00:02:18.390 --> 00:02:20.990
 Your choice is saved to your account.
 
-00:01:55.680 --> 00:01:58.080
+00:02:21.890 --> 00:02:24.290
 Staff sign in to the admin center.
 
-00:01:58.080 --> 00:02:05.110
+00:02:24.290 --> 00:02:31.320
 A short daily brief sums up the day: how busy rooms
 are, what was turned away, and what needs attention.
 
-00:02:05.110 --> 00:02:11.510
+00:02:31.320 --> 00:02:37.720
 Below it, staff see every booking, each room's
 status, and booking attempts the system refused.
 
-00:02:12.410 --> 00:02:17.190
+00:02:38.620 --> 00:02:43.400
 To close a room for an event or
 repairs, staff block the time.
 
-00:02:17.190 --> 00:02:22.450
+00:02:43.400 --> 00:02:48.660
 Anyone booked in that window is notified
 and offered another room automatically.
 
-00:02:23.350 --> 00:02:27.290
+00:02:49.560 --> 00:02:53.500
 Analytics shows usage by day, by hour, and by room.
 
-00:02:27.290 --> 00:02:32.050
+00:02:53.500 --> 00:02:58.260
 Every chart has a table view, so
 it works with screen readers too.
 
-00:02:32.950 --> 00:02:34.780
+00:02:59.160 --> 00:03:00.990
 Here's how we got here.
 
-00:02:34.780 --> 00:02:39.629
+00:03:00.990 --> 00:03:05.839
 In Sprint 1, our team built a
 React front end on sample data,
 
-00:02:39.629 --> 00:02:44.161
+00:03:05.839 --> 00:03:10.371
 a Supabase Postgres database,
 and a Node and Express API.
 
-00:02:45.140 --> 00:02:50.850
+00:03:11.350 --> 00:03:17.060
 The most important rule, no double bookings,
 is enforced by the database itself.
 
-00:02:50.850 --> 00:02:54.690
+00:03:17.060 --> 00:03:20.900
 Alex books Study Room 106 from 2 to 4 PM.
 
-00:02:54.690 --> 00:02:58.740
+00:03:20.900 --> 00:03:24.950
 When Jordan tries 3 to 5 PM, Postgres refuses it.
 
-00:02:58.740 --> 00:03:02.890
+00:03:24.950 --> 00:03:29.100
 4 to 5 PM is fine, because
 back-to-back bookings don't overlap.
 
-00:03:02.890 --> 00:03:07.250
+00:03:29.100 --> 00:03:33.460
 The three-hour limit and room
 capacity are checked the same way.
 
-00:03:08.150 --> 00:03:12.760
+00:03:34.360 --> 00:03:38.970
 The Express API turns those
 database errors into clear answers.
 
-00:03:12.760 --> 00:03:18.890
+00:03:38.970 --> 00:03:45.100
 A conflict becomes a 409 error with the code
 ROOM_TAKEN, which the app shows in plain words.
 
-00:03:19.790 --> 00:03:24.785
+00:03:46.000 --> 00:03:50.995
 In Sprint 2, we moved to Base44 to put
 a live, public app in front of users,
 
-00:03:24.785 --> 00:03:30.174
+00:03:50.995 --> 00:03:56.384
 carrying the same rules over and testing
 them automatically on every pull request.
 
-00:03:30.240 --> 00:03:34.630
+00:03:56.450 --> 00:04:00.840
 Over the following sprints we
 added staff tools, calendar export,
 
-00:03:34.630 --> 00:03:39.762
+00:04:00.840 --> 00:04:05.972
 the AI assistant, and the rebooking and
 accessibility features you just saw.
 
-00:03:40.730 --> 00:03:43.770
+00:04:06.940 --> 00:04:09.980
 That's the Study Room Reservation System.
 
-00:03:43.770 --> 00:03:46.130
+00:04:09.980 --> 00:04:12.340
 Try it at the address on screen.
 
-00:03:46.130 --> 00:03:48.140
+00:04:12.340 --> 00:04:14.350
 Thanks for watching.
