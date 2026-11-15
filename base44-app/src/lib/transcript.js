@@ -5,6 +5,7 @@ export const HELP_TRANSCRIPT = [
   "Choose Find a room. Filter by group size, by features like a whiteboard or a screen, and by the time you need. You'll only see rooms that are open and big enough for your group.",
   "Open a room to see its whole day at a glance. Open half-hours are green. Booked and closed times are marked, so you never pick a time that's already taken.",
   "Pick a start time and how long you need, up to three hours. Add your group size, and choose Reserve. Your booking is confirmed right away, and you can add it to Outlook or any calendar with one click.",
+  "Want it on your calendar? Press Add to Outlook, and choose Outlook on the web. Your PVAMU Microsoft 365 calendar opens a new event, already filled in with the room, the time, and a link back to your booking. Press Save, and it sits on your calendar with the rest of your week. Using Outlook on your desktop, Apple, or Google? Choose Download .ics instead.",
   "Your bookings live on your dashboard. You can change the time or cancel. When you cancel, the room opens up for other students right away.",
   "If staff ever need your room, you're not left stranded. You get an email and a notice here, with another room or time the system has already found for you. Choose Move me, and you're rebooked.",
   "Need help? The assistant button is on every page. Ask in plain words, like: find me a room for four people tomorrow at two. It answers using live availability.",
